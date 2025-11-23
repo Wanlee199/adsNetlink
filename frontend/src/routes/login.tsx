@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { z } from 'zod'
@@ -10,6 +10,11 @@ import { FieldInfo } from '../components/ui/field'
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      redirect: search.redirect as string | undefined,
+    }
+  },
 })
 
 const loginSchema = z.object({
@@ -19,6 +24,8 @@ const loginSchema = z.object({
 
 function LoginPage() {
   const loginMutation = useLogin()
+  const navigate = useNavigate()
+  const search = Route.useSearch()
   
   const form = useForm({
     defaultValues: {
@@ -29,14 +36,14 @@ function LoginPage() {
     validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
       try {
-        // Validate manually if needed, but form handles it.
-        // We need to ensure the types match what mutation expects.
-        // zodValidator ensures value matches schema if we used it correctly, 
-        // but here we just pass value.
-        // Let's validate explicitly or trust the form.
-        // TanStack Form's onSubmit is called only if validation passes.
         await loginMutation.mutateAsync(value);
         toast.success('Login successful');
+        
+        if (search.redirect) {
+          navigate({ to: search.redirect })
+        } else {
+          navigate({ to: '/' })
+        }
       } catch (error: any) {
         toast.error('Login failed: ' + (error.message || 'Unknown error'));
       }

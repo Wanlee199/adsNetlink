@@ -48,7 +48,7 @@ async function http<T>(path: string, config: RequestConfig = {}): Promise<T> {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
       // Optional: Dispatch an event or redirect
-      window.location.href = '/login';
+      window.location.href = `/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`;
     }
     
     const errorBody = await response.json().catch(() => ({}));

@@ -1,5 +1,7 @@
 import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useAtom } from 'jotai'
+import { userAtom } from '../store/auth'
 import { getShowtimeById, getMovieById } from '../data/movies'
 import { getSeatMapByRoomId } from '../data/seats'
 import { Seat, SeatStatus, SeatType } from '../types/movie'
@@ -14,6 +16,19 @@ export const Route = createFileRoute('/booking/$showtimeId')({
 function SeatSelection() {
   const { showtimeId } = Route.useParams()
   const navigate = useNavigate()
+  const [user] = useAtom(userAtom)
+  
+  useEffect(() => {
+    if (!user) {
+      navigate({ 
+        to: '/login', 
+        search: { 
+          redirect: `/booking/${showtimeId}` 
+        } 
+      })
+    }
+  }, [user, navigate, showtimeId])
+
   const showtime = getShowtimeById(Number(showtimeId))
   const movie = showtime ? getMovieById(showtime.movieId) : undefined
   const seatMap = showtime?.roomId ? getSeatMapByRoomId(showtime.roomId) : undefined

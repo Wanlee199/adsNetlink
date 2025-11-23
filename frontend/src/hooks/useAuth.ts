@@ -8,14 +8,12 @@ import { LoginRequest, RegisterRequest } from '../types/auth';
 export const useLogin = () => {
   const setUser = useSetAtom(userAtom);
   const setToken = useSetAtom(accessTokenAtom);
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
     onSuccess: (data) => {
       setUser(data.user);
       setToken(data.accessToken);
-      navigate({ to: '/' });
     },
   });
 };
@@ -23,14 +21,12 @@ export const useLogin = () => {
 export const useRegister = () => {
   const setUser = useSetAtom(userAtom);
   const setToken = useSetAtom(accessTokenAtom);
-  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: (data: RegisterRequest) => authService.register(data),
     onSuccess: (data) => {
       setUser(data.user);
       setToken(data.accessToken);
-      navigate({ to: '/' });
     },
   });
 };
@@ -55,6 +51,6 @@ export const useLogout = () => {
     setUser(null);
     setToken(null);
     queryClient.clear();
-    navigate({ to: '/login' });
+    navigate({ to: '/login', search: { redirect: undefined } });
   };
 };

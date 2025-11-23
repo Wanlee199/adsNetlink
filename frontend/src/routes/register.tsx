@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useForm } from '@tanstack/react-form'
 import { zodValidator } from '@tanstack/zod-form-adapter'
 import { z } from 'zod'
@@ -26,6 +26,7 @@ const registerSchema = z.object({
 
 function RegisterPage() {
   const registerMutation = useRegister()
+  const navigate = useNavigate()
   
   const form = useForm({
     defaultValues: {
@@ -47,6 +48,7 @@ function RegisterPage() {
         const { confirmPassword, ...registerData } = value
         await registerMutation.mutateAsync(registerData);
         toast.success('Registration successful');
+        navigate({ to: '/' })
       } catch (error: any) {
         toast.error('Registration failed: ' + (error.message || 'Unknown error'));
       }
@@ -120,7 +122,7 @@ function RegisterPage() {
         <CardFooter className="flex justify-center">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary hover:underline font-medium">
+            <Link to="/login" search={{ redirect: undefined }} className="text-primary hover:underline font-medium">
               Login
             </Link>
           </p>

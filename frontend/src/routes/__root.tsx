@@ -187,7 +187,7 @@ function Header() {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link to="/login">
+              <Link to="/login" search={{ redirect: undefined }}>
                 <Button variant="ghost" size="sm">Login</Button>
               </Link>
               <Link to="/register">
