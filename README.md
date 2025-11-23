@@ -2,8 +2,6 @@
 
 **Phiên bản:** 1.1 (Single Cinema - Pay at Counter)
 **Mục tiêu:** Xây dựng hệ thống đặt vé xem phim online cho một rạp duy nhất.
-**Trạng thái:** MVP (Minimum Viable Product).
-
 ---
 
 ## 1. TỔNG QUAN (OVERVIEW)
