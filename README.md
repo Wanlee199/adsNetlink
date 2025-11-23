@@ -69,7 +69,7 @@ Hệ thống phục vụ cho một rạp chiếu phim duy nhất. Khách hàng x
 
 ---
 
-## 4. API SPECIFICATION (Gợi ý cho Dev)
+## 4. API SPECIFICATION (Suggestion)
 
 ### 4.1. Public APIs
 * `GET /api/movies?search=...`: Lấy danh sách phim đang chiếu.
@@ -102,7 +102,6 @@ Hệ thống phục vụ cho một rạp chiếu phim duy nhất. Khách hàng x
     * Button action: **"Đặt vé (Trả sau tại quầy)"**.
 
 ---
-
 
 ## 6. GHI CHÚ KỸ THUẬT
 
