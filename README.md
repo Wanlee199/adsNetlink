@@ -12,7 +12,7 @@ Hệ thống phục vụ cho một rạp chiếu phim duy nhất. Khách hàng x
 ### 1.1. Các Actor (Người dùng)
 1.  **Guest (Khách vãng lai):** Xem phim, xem lịch, đăng ký/đăng nhập.
 2.  **Customer (Khách thành viên):** Đặt vé (giữ chỗ), xem lịch sử đặt vé.
-3.  **Manager (Quản lý):** Quản lý phim, phòng, suất chiếu, xem báo cáo.
+3.  **Manager (Quản lý):** Quản lý phim, phòng, suất chiếu, xem báo cáo, CRUD cho Customer(Tính sau)
 
 ---
 
