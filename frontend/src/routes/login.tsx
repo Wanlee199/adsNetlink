@@ -36,19 +36,26 @@ function LoginPage() {
     validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
       try {
-        await loginMutation.mutateAsync(value);
+        const result = await loginMutation.mutateAsync(value);
+        const user = result.user;
+
         toast.success('Login successful');
-        
+
+        if (user.roles?.includes('MANAGER')) {
+          navigate({ to: '/manager' });
+          return;
+        }
+
         if (search.redirect) {
-          navigate({ to: search.redirect })
+          navigate({ to: search.redirect });
         } else {
-          navigate({ to: '/' })
+          navigate({ to: '/' });
         }
       } catch (error: any) {
         toast.error('Login failed: ' + (error.message || 'Unknown error'));
       }
     },
-  })
+  });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
