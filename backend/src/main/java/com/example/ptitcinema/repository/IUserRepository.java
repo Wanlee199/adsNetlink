@@ -6,6 +6,6 @@ import com.example.ptitcinema.model.User;
 public interface IUserRepository {
     User findByEmail(String email);
     User findByUsername(String username);
-    User save(User user);
+    User saveRegister(User user);
     
 }

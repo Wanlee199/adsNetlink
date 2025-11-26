@@ -18,9 +18,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User login(String username, String password) {
+    public User login(String username,String email, String password) {
         User user = userRepo.findByUsername(username);
-        if (user == null) return null;
+        if(user == null){
+            user = userRepo.findByEmail(email);
+            if(user == null) return null;
+        }
         if (!user.getPassword().equals(password)) return null;
         return user;
     }
@@ -33,7 +36,7 @@ public class UserService implements IUserService {
         if(userRepo.findByUsername(user.getUsername()) != null) returnValue += "Username exists. \n";
         if(!returnValue.isEmpty()) return returnValue;
 
-        return userRepo.save(user);
+        return userRepo.saveRegister(user);
     }
 
 }

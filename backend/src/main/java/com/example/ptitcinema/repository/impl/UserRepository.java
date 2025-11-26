@@ -60,10 +60,15 @@ public class UserRepository  implements IUserRepository {
         }
     }
     @Override
-    public User save(User user){
+    public User saveRegister(User user){
         String sql = "INSERT INTO [User] (Username, Email, Password, FullName, Phone) VALUES (?, ?, ?, ?, ?)";
         sqlJdbcTemplate.update(sql, user.getUsername(), user.getEmail(), user.getPassword(), user.getFullName(), user.getPhone());
-        return findByEmail(user.getEmail());
+        User userSaved = findByEmail(user.getEmail());
+        int userId = userSaved.getId();
+        
+        String sqlRoles = "INSERT INTO [UserRole] (UserId, RoleId) VALUES (?, 1)";
+        sqlJdbcTemplate.update(sqlRoles, userId);
+        return userSaved;
     }
 
 }

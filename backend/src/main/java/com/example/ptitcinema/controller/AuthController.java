@@ -12,9 +12,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-    private IUserService userServ;
+    private IUserService userService;
     @Autowired
-    public void setMovieServ(IUserService userServ){this.userServ = userServ;}
+    public void setMovieServ(IuserServiceice userService){this.userService = userService;}
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -24,7 +24,7 @@ public class AuthController {
     public Object login(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         String password = body.get("password");
-        User user = userService.login(email, password);
+        User user = userService.login(email, email, password);
 
         if (user == null) return Map.of("error", "Invalid email or password");
 
