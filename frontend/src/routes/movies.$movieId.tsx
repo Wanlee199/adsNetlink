@@ -71,9 +71,11 @@ function MovieDetails() {
                 ))}
               </div>
               {movie.trailerUrl && (
-                <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white gap-2">
+                <Link to={Route.path} params={{ movieId }} hash="trailer">
+                  <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white gap-2">
                   <Play className="w-5 h-5 fill-current" /> Watch Trailer
                 </Button>
+                </Link>
               )}
             </div>
           </div>
@@ -117,7 +119,7 @@ function MovieDetails() {
 
             {/* Trailer */}
             {movie.trailerUrl && (
-              <div>
+              <div id='trailer'>
                 <h2 className="text-2xl font-bold mb-4">Trailer</h2>
                 <div className="aspect-video rounded-xl overflow-hidden bg-black">
                   <iframe
