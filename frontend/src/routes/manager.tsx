@@ -93,9 +93,7 @@ function ManagerPage() {
   }
 
   const handleAddMovie = () => {
-    updateMovies((prev) => [
-      ...prev,
-      {
+    const prevMovie =  {
         id: Date.now(),
         title: 'New Movie',
         genre: '',
@@ -103,8 +101,22 @@ function ManagerPage() {
         poster: '',
         duration: '',
         synopsis: '',
-      },
-    ])
+      }
+    // updateMovies((prev) => [
+    //   ...prev,
+    //   {
+    //     id: Date.now(),
+    //     title: 'New Movie',
+    //     genre: '',
+    //     rating: 0,
+    //     poster: '',
+    //     duration: '',
+    //     synopsis: '',
+    //   },
+    // ])
+      setMovie(prevMovie)
+      setShowDetail(true)
+
   }
 
   const handleChangeMovie = (id: number, field: keyof Movie, value: any) => {
@@ -122,9 +134,16 @@ function ManagerPage() {
   }
   const handleSaveMovie = () => {
     if (!movie) return;
-    const updatedList = movies.map(m =>
-      m.id === movie.id ? movie : m
-    );
+    const isCreated = movies.some(m => m.id === movie.id);
+    let updatedList : Array<any>
+    if (!isCreated){
+      updatedList = [...movies, movie];
+    } else {
+      updatedList = movies.map(m =>
+        m.id === movie.id ? movie : m
+      );
+    }
+    console.log(updatedList)
     setMovies(updatedList);
     saveManagerMovies(updatedList);
     toast.success('Movies have been saved');
@@ -405,7 +424,6 @@ function ManagerPage() {
 
             {/* RIGHT COLUMN — MOVIE FIELDS */}
             <div className="flex flex-col gap-4">
-
 
               {/* Movie title */}
               <div className="flex flex-col gap-1">

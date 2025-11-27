@@ -18,7 +18,7 @@ export const Route = createFileRoute('/login')({
 })
 
 const loginSchema = z.object({
-  usernameOrEmail: z.string().min(1, 'Username or Email is required'),
+  usernameOrEmail: z.string().min(1, 'Username is required'),
   password: z.string().min(1, 'Password is required'),
 })
 
@@ -26,7 +26,7 @@ function LoginPage() {
   const loginMutation = useLogin()
   const navigate = useNavigate()
   const search = Route.useSearch()
-  
+
   const form = useForm({
     defaultValues: {
       usernameOrEmail: '',
@@ -81,7 +81,7 @@ function LoginPage() {
                 onChange: loginSchema.shape.usernameOrEmail,
               }}
               children={(field) => (
-                <FieldInfo field={field} label="Username or Email" placeholder="user@example.com" />
+                <FieldInfo field={field} label="Username" placeholder="Please input Username" />
               )}
             />
             <form.Field
