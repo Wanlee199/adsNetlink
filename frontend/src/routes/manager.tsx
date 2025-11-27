@@ -406,6 +406,7 @@ function ManagerPage() {
             {/* RIGHT COLUMN — MOVIE FIELDS */}
             <div className="flex flex-col gap-4">
 
+
               {/* Movie title */}
               <div className="flex flex-col gap-1">
                 <span className="text-xs font-semibold text-muted-foreground">Movie title</span>
