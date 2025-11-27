@@ -1,9 +1,15 @@
 package com.example.ptitcinema.controller;
 
 import com.example.ptitcinema.model.User;
+import com.example.ptitcinema.model.dto.LoginRequest;
+import com.example.ptitcinema.model.dto.LoginResponse;
+import com.example.ptitcinema.model.dto.RegisterRequest;
+import com.example.ptitcinema.model.dto.UserDto; 
 import com.example.ptitcinema.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -14,53 +20,53 @@ import java.util.Map;
 public class AuthController {
     private IUserService userService;
     @Autowired
-    public void setMovieServ(IuserServiceice userService){this.userService = userService;}
+    public void setUserService(IUserService userService){this.userService = userService;}
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @Operation(summary = "Login user", description = "Authenticates a user and returns access tokens")
     @GetMapping("/login")
-    public Object login(@RequestBody Map<String, String> body) {
-        String email = body.get("email");
-        String password = body.get("password");
-        User user = userService.login(email, email, password);
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest req) {
+        
+        User user = userService.login(req.getUsername(), req.getPassword()); 
+        
+        if (user == null) {
+            return new ResponseEntity("Invalid username or password", HttpStatus.UNAUTHORIZED);
+        }
 
-        if (user == null) return Map.of("error", "Invalid email or password");
+        String token = jwtUtil.generateToken(user.getEmail());
 
-        String token = jwtUtil.generateToken(email);
-
-        Map<String, Object> res = new HashMap<>();
-        res.put("accessToken", token);
-        res.put("user", user);
-        return res;
+        UserDto userDto = new UserDto(user);
+        
+        LoginResponse res = new LoginResponse(token, userDto);
+        
+        return ResponseEntity.ok(res); 
     }
 
     @Operation(summary = "Register new user")
     @PostMapping("/register")
-    public Object register(@RequestBody Map<String, String> body) {
-        String userName = body.get("username");
-        String email = body.get("email");
-        String password = body.get("password");
-        String fullName = body.get("fullName");
-        String phone = body.get("phone");
-
+    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
+        
         User user = new User();
-        user.setUserName(userName);
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setFullName(fullName);
-        user.setPhone(phone);
+        user.setUserName(req.getUsername());
+        user.setEmail(req.getEmail());
+        user.setPassword(req.getPassword());
+        user.setFullName(req.getFullName());
+        user.setPhone(req.getPhone());
         user.setRoles(Arrays.asList("CUSTOMER"));
 
         User savedUser = userService.register(user);
-        if (savedUser instanceof String) return Map.of("error", savedUser);
 
+        if (savedUser == null) { 
+            return new ResponseEntity("Registration failed", HttpStatus.BAD_REQUEST);
+        }
+        
         String token = jwtUtil.generateToken(savedUser.getEmail());
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("accessToken", token);
-        res.put("user", savedUser);
-        return res;
+        UserDto userDto = new UserDto(savedUser);
+        LoginResponse res = new LoginResponse(token, userDto);
+
+        return new ResponseEntity<>(res, HttpStatus.CREATED); 
     }
 }
