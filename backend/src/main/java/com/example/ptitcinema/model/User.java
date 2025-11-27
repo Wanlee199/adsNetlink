@@ -3,7 +3,7 @@ package com.example.ptitcinema.model;
 import java.util.List;
 
 public class User {
-    private int userId;
+    private int id;
     private String userName;
     private String email;
     private String password;
@@ -11,8 +11,8 @@ public class User {
     private String phone;
     private List<String> roles;
 
-    public int getUserId() { return userId; }
-    public void setUserId(int userId) { this.userId = userId; }
+    public int getId() { return id; }
+    public void setId(int userId) { this.id = id; }
 
     public String getUserName() { return userName; }
     public void setUserName(String userName) { this.userName = userName; }

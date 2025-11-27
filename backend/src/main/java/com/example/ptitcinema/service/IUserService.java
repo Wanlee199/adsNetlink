@@ -5,7 +5,8 @@ import com.example.ptitcinema.model.User;
 import java.util.List;
 
 public interface IUserService {
-    User login(String email, String password);
+    Optional<UserDto> getProfileByEmail(String email);
+    User login(String usernameOrEmail, String password);
     User register(User user);
     
 }

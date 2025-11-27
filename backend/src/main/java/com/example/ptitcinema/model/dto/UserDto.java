@@ -4,7 +4,7 @@ import com.example.ptitcinema.model.User;
 import java.util.List;
 
 public class UserDto {
-    private int userId;
+    private int id;
     private String userName;
     private String email;
     private String fullName;
@@ -12,7 +12,7 @@ public class UserDto {
     private List<String> roles;
     
     public UserDto(User user) {
-        this.userId = user.getUserId();
+        this.Id = user.getId();
         this.userName = user.getUserName();
         this.email = user.getEmail();
         this.fullName = user.getFullName();
@@ -20,8 +20,8 @@ public class UserDto {
         this.roles = user.getRoles();
     }
 
-    public int getUserId() { return userId; }
-    public String getUserName() { return userName; }
+    public int getId() { return id; }
+    public String getUsername() { return userName; }
     public String getEmail() { return email; }
     public String getFullName() { return fullName; }
     public String getPhone() { return phone; }

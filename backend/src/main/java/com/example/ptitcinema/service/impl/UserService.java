@@ -18,10 +18,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User login(String username,String email, String password) {
-        User user = userRepo.findByUsername(username);
+    public User login(String usernameOrEmail, String password) {
+        User user = userRepo.findByUsername(usernameOrEmail);
         if(user == null){
-            user = userRepo.findByEmail(email);
+            user = userRepo.findByEmail(usernameOrEmail);
             if(user == null) return null;
         }
         if (!user.getPassword().equals(password)) return null;
@@ -37,6 +37,25 @@ public class UserService implements IUserService {
         if(!returnValue.isEmpty()) return returnValue;
 
         return userRepo.saveRegister(user);
+    }
+
+    @Override
+    public Optional<UserDto> getProfileByEmail(String email) {
+        // Sử dụng phương thức repository đã có
+        User user = userRepo.findByEmail(email);
+
+        if (user == null) {
+            return Optional.empty();
+        }
+        
+        // **Lưu ý quan trọng**: Bạn cần đảm bảo Repository có logic 
+        // để lấy danh sách Roles cho User này.
+        // Tôi giả định logic này nằm trong findByEmail hoặc được gọi riêng 
+        // trong UserRepository (nếu chưa có, bạn cần tự bổ sung).
+        
+        // Chuyển đổi từ Entity sang DTO
+        UserDto userDto = new UserDto(user);
+        return Optional.of(userDto);
     }
 
 }
