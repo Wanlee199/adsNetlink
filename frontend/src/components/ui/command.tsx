@@ -50,11 +50,34 @@ function CommandDialog({
     </Dialog>
   );
 }
+function DetailDialog({
+                         title = "Detail Movie",
+                         description,
+                         children,
+                         ...props
+                       }: React.ComponentProps<typeof Dialog> & {
+  title?: string;
+  description?: string;
+}) {  return (
+    <Dialog {...props}>
+      <DialogContent className="max-w-7xl p-6 space-y-4">
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
+        </DialogHeader>
+
+        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
+          {children}
+        </div>
+      </DialogContent>
+    </Dialog>
+);
+}
 
 function CommandInput({
-  className,
-  ...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+                        className,
+                        ...props
+                      }: React.ComponentProps<typeof CommandPrimitive.Input>) {
   return (
     <div
       data-slot="command-input-wrapper"
@@ -163,6 +186,7 @@ function CommandShortcut({
 }
 
 export {
+  DetailDialog,
   Command,
   CommandDialog,
   CommandInput,
