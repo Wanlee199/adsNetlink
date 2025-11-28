@@ -136,6 +136,7 @@ function ManagerPage() {
     if (!movie) return;
     const isCreated = movies.some(m => m.id === movie.id);
     let updatedList : Array<any>
+
     if (!isCreated){
       updatedList = [...movies, movie];
     } else {
