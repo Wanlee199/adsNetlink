@@ -48,6 +48,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "cookie-es": "^2.0.0",
+    "dayjs": "^1.11.19",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.16.0",
     "grapheme-splitter": "^1.0.4",

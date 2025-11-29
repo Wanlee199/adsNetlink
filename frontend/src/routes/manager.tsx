@@ -19,6 +19,7 @@ import {Input} from '../components/ui/input'
 import {Textarea} from '../components/ui/textarea'
 import {Column, Table} from "@/components/ui/table";
 import {DetailDialog} from "@/components/ui/command";
+import dayjs from "dayjs";
 
 const MANAGER_MOVIES_KEY = 'manager_movies'
 const MANAGER_SHOWTIMES_KEY = 'manager_showtimes'
@@ -467,6 +468,26 @@ function ManagerPage() {
                   placeholder="E.g., 2h 15m"
                 />
               </div>
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold text-muted-foreground">Release Date</span>
+                <Input
+                  type="date"
+                  value={dayjs(movie.releaseDate).format('YYYY-MM-DD')}
+                  onChange={(e) =>
+                    handleChangeMovie(movie.id, 'releaseDate', e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <span className="text-xs font-semibold text-muted-foreground">Duration</span>
+                <Input
+                  value={movie.duration}
+                  onChange={(e) => handleChangeMovie(movie.id, 'duration', e.target.value)}
+                  placeholder="E.g., 2h 15m"
+                />
+              </div>
+
 
               {/* Description — full width */}
               <div className="flex flex-col gap-1">
@@ -476,6 +497,45 @@ function ManagerPage() {
                   onChange={(e) => handleChangeMovie(movie.id, 'synopsis', e.target.value)}
                   placeholder="Short description of the movie"
                 />
+              </div>
+              <div className="flex flex-col gap-1">
+
+                {/* Hidden input */}
+                <input
+                  id={`backdrop-upload-${movie.id}`}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+
+                    const imageUrl = URL.createObjectURL(file);
+                    handleChangeMovie(movie.id, "backdrop", imageUrl);
+                  }}
+                />
+                <div
+                  className="w-full h-48 border rounded overflow-hidden flex items-center justify-center bg-muted">
+                  {movie.backdrop ? (
+                    <img
+                      src={movie.backdrop}
+                      alt="Poster preview"
+                      className="object-contain"
+                    />
+                  ) : (
+                    <span className="text-xs text-muted-foreground">No Backdrop</span>
+                  )}
+
+                </div>
+                {/* Upload button */}
+                <button
+                  type="button"
+                  className="w-full h-8 px-3 py-2 rounded bg-primary text-white text-sm hover:bg-primary/90"
+                  onClick={() => document.getElementById(`backdrop-upload-${movie.id}`)?.click()}
+                >
+                  Upload Backdrop
+                </button>
+
               </div>
             </div>
           </div>
@@ -493,8 +553,10 @@ function ManagerPage() {
         </div>
 
       </DetailDialog>
-      {/*<Card>*/}
-      {/*  <CardHeader className="flex flex-col gap-2">*/}
+      {/*<Card>*/
+      }
+      {/*  <CardHeader className="flex flex-col gap-2">*/
+      }
       {/*    <div>*/}
       {/*      <CardTitle>Movie Management</CardTitle>*/}
       {/*      <CardDescription>*/}
