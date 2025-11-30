@@ -1,0 +1,70 @@
+package com.example.ptitcinema.service.impl;
+
+import com.example.ptitcinema.model.Booking;
+import com.example.ptitcinema.model.dto.BookingRequest;
+import com.example.ptitcinema.model.dto.BookingResponse;
+import com.example.ptitcinema.repository.IBookingRepository;
+import com.example.ptitcinema.service.IBookingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+@Service
+public class BookingService implements IBookingService {
+    private final IBookingRepository bookingRepository;
+
+    @Autowired
+    public BookingService(IBookingRepository bookingRepository) {
+        this.bookingRepository = bookingRepository;
+    }
+    
+    // Đảm bảo cả hai thao tác (saveBooking và saveBookingDetails) thành công hoặc thất bại cùng lúc
+    @Transactional
+    @Override
+    public Optional<BookingResponse> createBooking(String userEmail, BookingRequest request) {
+        Optional<Integer> userIdOptional = bookingRepository.findUserIdByEmail(userEmail);
+        if (userIdOptional.isEmpty()) {
+            return Optional.empty(); 
+        }
+        int userId = userIdOptional.get();
+
+        //Kiểm tra MovieId (cần cho Response, không cần thiết cho Booking Entity)
+        Optional<Integer> movieIdOptional = bookingRepository.findMovieIdByShowtimeId(request.getShowtimeId());
+        if (movieIdOptional.isEmpty()) {
+            return Optional.empty(); 
+        }
+        int movieId = movieIdOptional.get();
+
+        // **Lưu ý quan trọng: Thiếu logic kiểm tra ghế đã đặt chưa (Concurrency check)!**
+        // Trong môi trường production, bạn cần kiểm tra lại trạng thái ghế tại đây.
+
+        //Lưu Booking chính
+        Booking savedBooking = bookingRepository.saveBooking(userId, request);
+        int bookingId = savedBooking.getId();
+
+        if (bookingId == -1) return Optional.empty();
+
+        //Lưu BookingDetails (Chi tiết ghế)
+        bookingRepository.saveBookingDetails(bookingId, request.getSeats());
+
+        //Tạo Response
+        BookingResponse response = new BookingResponse();
+        response.setId("BK" + bookingId); 
+        response.setUserId(userId);
+        response.setMovieId(movieId);
+        response.setShowtimeId(request.getShowtimeId());
+        response.setCinemaName(request.getCinemaName());
+        response.setMovieTitle(request.getMovieTitle());
+        response.setDate(request.getDate());
+        response.setTime(request.getTime());
+        response.setSeats(request.getSeats());
+        response.setTotalPrice(request.getTotalPrice());
+        response.setStatus(savedBooking.getStatus() == 0 ? "pending" : "confirmed"); 
+        response.setCreatedAt(savedBooking.getCreatedAt());
+        response.setQrCode("PTIT_CINEMA_BK" + bookingId); 
+        
+        return Optional.of(response);
+    }
+}
