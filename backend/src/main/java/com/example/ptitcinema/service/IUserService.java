@@ -1,6 +1,7 @@
 package com.example.ptitcinema.service;
 
 import com.example.ptitcinema.model.User;
+import com.example.ptitcinema.model.dto.UserDto;
 
 import java.util.List;
 import java.util.Optional;

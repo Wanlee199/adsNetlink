@@ -1,12 +1,14 @@
 package com.example.ptitcinema.service.impl;
 
 import com.example.ptitcinema.model.User;
+import com.example.ptitcinema.model.dto.UserDto;
 import com.example.ptitcinema.repository.IUserRepository;
 import com.example.ptitcinema.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements IUserService {
@@ -33,8 +35,8 @@ public class UserService implements IUserService {
     public User register( User user){
         String returnValue ="";
         if(userRepo.findByEmail(user.getEmail()) != null) returnValue += "Email exists. \n";
-        if(userRepo.findByUsername(user.getUsername()) != null) returnValue += "Username exists. \n";
-        if(!returnValue.isEmpty()) return returnValue;
+        if(userRepo.findByUsername(user.getUserName()) != null) returnValue += "Username exists. \n";
+        if(!returnValue.isEmpty()) return null;
 
         return userRepo.saveRegister(user);
     }
