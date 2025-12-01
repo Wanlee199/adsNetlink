@@ -65,7 +65,7 @@ function PaymentPage() {
     await new Promise(resolve => setTimeout(resolve, 2000))
 
     // Create booking
-    const booking = bookingService.createBooking({
+    const booking = await bookingService.createBooking({
       movieId: searchParams.movieId,
       showtimeId: searchParams.showtimeId,
       cinemaName: searchParams.cinemaName,

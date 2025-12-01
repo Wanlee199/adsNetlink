@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { bookingService } from '../services/booking'
 import { Booking } from '../types/booking'
 import { Card } from '../components/ui/card'
@@ -16,7 +16,15 @@ type FilterType = 'all' | 'upcoming' | 'past'
 
 function MyTickets() {
   const [filter, setFilter] = useState<FilterType>('all')
-  const allBookings = bookingService.getAllBookings()
+  const [allBookings, setAllBookings] = useState<Booking[]>([])
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+        const bookings = await bookingService.getUserBookings()
+        setAllBookings(bookings)
+    }
+    fetchBookings()
+  }, [])
 
   const now = new Date()
   

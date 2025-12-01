@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { MOVIES } from '../data/movies'
+import { useState, useEffect } from 'react'
+import { movieService } from '../services/movie'
+import { Movie } from '../types/movie'
 import { Card } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { MovieCard } from '../components/MovieCard'
@@ -15,16 +17,21 @@ export const Route = createFileRoute('/search')({
 
 function SearchResults() {
   const { q } = Route.useSearch()
-  
-  // Filter movies based on search query
-  const searchResults = MOVIES.filter(movie => {
-    const query = q.toLowerCase()
-    return (
-      movie.title.toLowerCase().includes(query) ||
-      movie.genre.toLowerCase().includes(query) ||
-      movie.synopsis?.toLowerCase().includes(query)
-    )
-  })
+  const [searchResults, setSearchResults] = useState<Movie[]>([])
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const allMovies = await movieService.getMovies()
+      const query = q.toLowerCase()
+      const filtered = allMovies.filter(movie => 
+        movie.title.toLowerCase().includes(query) ||
+        movie.genre.toLowerCase().includes(query) ||
+        (movie.synopsis && movie.synopsis.toLowerCase().includes(query))
+      )
+      setSearchResults(filtered)
+    }
+    fetchMovies()
+  }, [q])
 
   return (
     <div className="min-h-screen bg-background py-8">

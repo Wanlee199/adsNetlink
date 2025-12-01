@@ -2,8 +2,9 @@ import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { userAtom } from '../store/auth'
-import { getShowtimeById, getMovieById } from '../data/movies'
-import { getSeatMapByRoomId } from '../data/seats'
+import { movieService } from '../services/movie'
+import { bookingService } from '../services/booking'
+import { Movie, Showtime } from '../types/movie'
 import { Seat, SeatStatus, SeatType } from '../types/movie'
 import { Button } from '../components/ui/button'
 import { ArrowLeft, Check } from 'lucide-react'
@@ -29,13 +30,44 @@ function SeatSelection() {
     }
   }, [user, navigate, showtimeId])
 
-  const showtime = getShowtimeById(Number(showtimeId))
-  const movie = showtime ? getMovieById(showtime.movieId) : undefined
-  const seatMap = showtime?.roomId ? getSeatMapByRoomId(showtime.roomId) : undefined
+  const [showtime, setShowtime] = useState<Showtime | undefined>(undefined)
+  const [movie, setMovie] = useState<Movie | undefined>(undefined)
+  const [bookedSeats, setBookedSeats] = useState<Set<string>>(new Set())
+  const [loading, setLoading] = useState(true)
+
+  // Generate static seat map (10 rows A-J, 10 seats 1-10)
+  const rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+  const seatsPerRow = 10
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const s = await movieService.getShowtimeById(Number(showtimeId))
+        setShowtime(s)
+        if (s) {
+          const m = await movieService.getMovieById(s.movieId)
+          setMovie(m)
+          
+          // Fetch booked seats
+          const booked = await bookingService.getBookedSeats(s.id)
+          setBookedSeats(new Set(booked))
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [showtimeId])
 
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set())
 
-  if (!showtime || !movie || !seatMap) {
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
+
+  if (!showtime || !movie) {
     return (
       <div className="container py-20 text-center">
         <h1 className="text-3xl font-bold mb-4">Booking Not Found</h1>
@@ -44,27 +76,28 @@ function SeatSelection() {
     )
   }
 
-  const handleSeatClick = (seat: Seat) => {
-    if (seat.status === SeatStatus.OCCUPIED) return
+  const handleSeatClick = (seatId: string) => {
+    if (bookedSeats.has(seatId)) return
 
     const newSelected = new Set(selectedSeats)
-    if (newSelected.has(seat.id)) {
-      newSelected.delete(seat.id)
+    if (newSelected.has(seatId)) {
+      newSelected.delete(seatId)
     } else {
       // Limit to 8 seats max
       if (newSelected.size >= 8) {
         return
       }
-      newSelected.add(seat.id)
+      newSelected.add(seatId)
     }
     setSelectedSeats(newSelected)
   }
 
-  const getSeatClassName = (seat: Seat) => {
-    const isSelected = selectedSeats.has(seat.id)
+  const getSeatClassName = (seatId: string) => {
+    const isSelected = selectedSeats.has(seatId)
+    const isBooked = bookedSeats.has(seatId)
     const baseClasses = 'relative w-9 h-10 md:w-11 md:h-12 rounded-t-xl cursor-pointer transition-all duration-300 flex items-center justify-center text-[10px] md:text-xs font-semibold border-2'
     
-    if (seat.status === SeatStatus.OCCUPIED) {
+    if (isBooked) {
       return cn(baseClasses, 'bg-gray-300 dark:bg-gray-700 border-gray-400 dark:border-gray-600 cursor-not-allowed opacity-40 text-gray-500')
     }
     
@@ -72,27 +105,12 @@ function SeatSelection() {
       return cn(baseClasses, 'bg-red-600 border-red-700 text-white scale-110 shadow-xl shadow-red-500/50 ring-2 ring-red-400')
     }
     
-    switch (seat.type) {
-      case SeatType.VIP:
-        return cn(baseClasses, 'bg-gradient-to-b from-amber-400 to-amber-500 border-amber-600 hover:from-amber-500 hover:to-amber-600 text-white hover:scale-105 hover:shadow-lg')
-      case SeatType.COUPLE:
-        return cn(baseClasses, 'bg-gradient-to-b from-pink-400 to-pink-500 border-pink-600 hover:from-pink-500 hover:to-pink-600 text-white hover:scale-105 hover:shadow-lg')
-      default:
-        return cn(baseClasses, 'bg-gradient-to-b from-blue-400 to-blue-500 border-blue-600 hover:from-blue-500 hover:to-blue-600 text-white hover:scale-105 hover:shadow-lg')
-    }
+    // Standard available seat
+    return cn(baseClasses, 'bg-gradient-to-b from-blue-400 to-blue-500 border-blue-600 hover:from-blue-500 hover:to-blue-600 text-white hover:scale-105 hover:shadow-lg')
   }
 
-  const selectedSeatObjects = seatMap.seats.filter(seat => selectedSeats.has(seat.id))
-  const totalPrice = selectedSeatObjects.reduce((sum, seat) => sum + seat.price, 0)
-
-  // Group seats by row for display
-  const seatsByRow: Record<string, Seat[]> = {}
-  seatMap.seats.forEach(seat => {
-    if (!seatsByRow[seat.row]) {
-      seatsByRow[seat.row] = []
-    }
-    seatsByRow[seat.row].push(seat)
-  })
+  const selectedSeatCount = selectedSeats.size
+  const totalPrice = selectedSeatCount * showtime.price
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -131,30 +149,34 @@ function SeatSelection() {
             {/* Seats */}
             <div className="max-w-4xl mx-auto">
               <div className="space-y-2 md:space-y-3">
-                {Object.entries(seatsByRow).map(([row, seats]) => (
+                {rows.map((row) => (
                   <div key={row} className="flex items-center justify-center gap-1 md:gap-2">
                     <span className="w-8 text-center font-bold text-sm text-muted-foreground">{row}</span>
                     <div className="flex gap-1 md:gap-2">
-                      {seats.map((seat, index) => (
-                        <div key={seat.id} className="flex">
-                          {/* Add gap in the middle for aisle */}
-                          {index === Math.floor(seats.length / 2) && (
-                            <div className="w-6 md:w-10" />
-                          )}
-                          <button
-                            onClick={() => handleSeatClick(seat)}
-                            className={getSeatClassName(seat)}
-                            disabled={seat.status === SeatStatus.OCCUPIED}
-                            title={`${seat.id} - ${seat.type} - ${seat.price.toLocaleString('vi-VN')}₫`}
-                          >
-                            {selectedSeats.has(seat.id) ? (
-                              <Check className="w-4 h-4 md:w-5 md:h-5" />
-                            ) : (
-                              <span className="opacity-70">{seat.number}</span>
+                      {Array.from({ length: seatsPerRow }, (_, i) => i + 1).map((num, index) => {
+                        const seatId = `${row}${num}`
+                        const isBooked = bookedSeats.has(seatId)
+                        return (
+                          <div key={seatId} className="flex">
+                            {/* Add gap in the middle for aisle */}
+                            {index === seatsPerRow / 2 && (
+                              <div className="w-6 md:w-10" />
                             )}
-                          </button>
-                        </div>
-                      ))}
+                            <button
+                              onClick={() => handleSeatClick(seatId)}
+                              className={getSeatClassName(seatId)}
+                              disabled={isBooked}
+                              title={`${seatId} - ${showtime.price.toLocaleString('vi-VN')}₫`}
+                            >
+                              {selectedSeats.has(seatId) ? (
+                                <Check className="w-4 h-4 md:w-5 md:h-5" />
+                              ) : (
+                                <span className="opacity-70">{num}</span>
+                              )}
+                            </button>
+                          </div>
+                        )
+                      })}
                     </div>
                     <span className="w-8 text-center font-bold text-sm text-muted-foreground">{row}</span>
                   </div>
@@ -168,15 +190,7 @@ function SeatSelection() {
               <div className="flex flex-wrap justify-center gap-6">
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-10 rounded-t-xl bg-gradient-to-b from-blue-400 to-blue-500 border-2 border-blue-600 shadow-md" />
-                  <span className="text-sm font-medium">Standard</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-10 rounded-t-xl bg-gradient-to-b from-amber-400 to-amber-500 border-2 border-amber-600 shadow-md" />
-                  <span className="text-sm font-medium">VIP</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-9 h-10 rounded-t-xl bg-gradient-to-b from-pink-400 to-pink-500 border-2 border-pink-600 shadow-md" />
-                  <span className="text-sm font-medium">Couple</span>
+                  <span className="text-sm font-medium">Available</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-9 h-10 rounded-t-xl bg-red-600 border-2 border-red-700 shadow-md" />
@@ -205,22 +219,22 @@ function SeatSelection() {
                     <div>
                       <p className="text-sm text-muted-foreground mb-2">Selected Seats</p>
                       <div className="flex flex-wrap gap-2">
-                        {selectedSeatObjects.map(seat => (
+                        {Array.from(selectedSeats).sort().map(seatId => (
                           <div
-                            key={seat.id}
+                            key={seatId}
                             className="px-3 py-1 bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-sm font-medium"
                           >
-                            {seat.id}
+                            {seatId}
                           </div>
                         ))}
                       </div>
                     </div>
 
                     <div className="space-y-2 pt-4 border-t">
-                      {selectedSeatObjects.map(seat => (
-                        <div key={seat.id} className="flex justify-between text-sm">
-                          <span>{seat.id} ({seat.type})</span>
-                          <span>{seat.price.toLocaleString('vi-VN')} ₫</span>
+                      {Array.from(selectedSeats).sort().map(seatId => (
+                        <div key={seatId} className="flex justify-between text-sm">
+                          <span>{seatId}</span>
+                          <span>{showtime.price.toLocaleString('vi-VN')} ₫</span>
                         </div>
                       ))}
                     </div>

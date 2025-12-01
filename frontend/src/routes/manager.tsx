@@ -4,8 +4,9 @@ import * as React from 'react'
 import {toast} from 'sonner'
 
 import {userAtom} from '../store/auth'
-import {MOVIES, SHOWTIMES, CINEMAS} from '../data/movies'
-import type {Movie, Showtime} from '../types/movie'
+import { movieService } from '../services/movie'
+import { CINEMAS } from '../data/movies'
+import type { Movie, Showtime } from '../types/movie'
 
 import {
   Card,
@@ -21,40 +22,6 @@ import {Column, Table} from "@/components/ui/table";
 import {DetailDialog} from "@/components/ui/command";
 import dayjs from "dayjs";
 
-const MANAGER_MOVIES_KEY = 'manager_movies'
-const MANAGER_SHOWTIMES_KEY = 'manager_showtimes'
-
-function loadManagerMovies(): Movie[] {
-  if (typeof window === 'undefined') return MOVIES
-  const raw = localStorage.getItem(MANAGER_MOVIES_KEY)
-  if (!raw) return MOVIES
-  try {
-    return JSON.parse(raw) as Movie[]
-  } catch {
-    return MOVIES
-  }
-}
-
-function saveManagerMovies(movies: Movie[]) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(MANAGER_MOVIES_KEY, JSON.stringify(movies))
-}
-
-function loadManagerShowtimes(): Showtime[] {
-  if (typeof window === 'undefined') return SHOWTIMES
-  const raw = localStorage.getItem(MANAGER_SHOWTIMES_KEY)
-  if (!raw) return SHOWTIMES
-  try {
-    return JSON.parse(raw) as Showtime[]
-  } catch {
-    return SHOWTIMES
-  }
-}
-
-function saveManagerShowtimes(showtimes: Showtime[]) {
-  if (typeof window === 'undefined') return
-  localStorage.setItem(MANAGER_SHOWTIMES_KEY, JSON.stringify(showtimes))
-}
 
 export const Route = createFileRoute('/manager')({
   component: ManagerPage,
@@ -81,8 +48,13 @@ function ManagerPage() {
     //   navigate({ to: '/' })
     //   return
     // }
-    setMovies(loadManagerMovies())
-    setShowtimes(loadManagerShowtimes())
+    const fetchData = async () => {
+      const m = await movieService.getMovies()
+      setMovies(m)
+      const s = await movieService.getShowtimes()
+      setShowtimes(s)
+    }
+    fetchData()
   }, [user, navigate])
 
   // ----- Movies helpers -----
@@ -95,29 +67,21 @@ function ManagerPage() {
 
   const handleAddMovie = () => {
     const prevMovie =  {
-        id: Date.now(),
+        id: 0,
         title: 'New Movie',
         genre: '',
         rating: 0,
         poster: '',
         duration: '',
         synopsis: '',
-      }
-    // updateMovies((prev) => [
-    //   ...prev,
-    //   {
-    //     id: Date.now(),
-    //     title: 'New Movie',
-    //     genre: '',
-    //     rating: 0,
-    //     poster: '',
-    //     duration: '',
-    //     synopsis: '',
-    //   },
-    // ])
+        releaseDate: new Date().toISOString().split('T')[0],
+        backdrop: '',
+        director: '',
+        cast: [],
+        trailerUrl: ''
+      } as Movie
       setMovie(prevMovie)
       setShowDetail(true)
-
   }
 
   const handleChangeMovie = (id: number, field: keyof Movie, value: any) => {
@@ -125,40 +89,40 @@ function ManagerPage() {
       prev.id === id ? {...prev, [field]: value} : prev)
   }
 
-  const handleDeleteMovie = (id: number) => {
-    updateMovies((prev) => prev.filter((m) => m.id !== id))
+  const handleDeleteMovie = async (id: number) => {
+    await movieService.deleteMovie(id)
+    const m = await movieService.getMovies()
+    setMovies(m)
+    toast.success('Movie deleted')
   }
 
-  const handleSaveMovies = () => {
-    saveManagerMovies(movies)
-    toast.success('Movies have been saved')
-  }
-  const handleSaveMovie = () => {
+  const handleSaveMovie = async () => {
     if (!movie) return;
-    const isCreated = movies.some(m => m.id === movie.id);
-    let updatedList : Array<any>
-
-    if (!isCreated){
-      updatedList = [...movies, movie];
-    } else {
-      updatedList = movies.map(m =>
-        m.id === movie.id ? movie : m
-      );
+    try {
+        if (movie.id === 0 || !movies.find(m => m.id === movie.id)) {
+             // Create
+             // Remove id 0 to let backend/mock assign
+             const { id, ...rest } = movie
+             await movieService.createMovie(rest as Movie)
+        } else {
+             await movieService.updateMovie(movie.id, movie)
+        }
+        const m = await movieService.getMovies()
+        setMovies(m)
+        toast.success('Movie saved')
+        setShowDetail(false)
+    } catch (e) {
+        toast.error('Failed to save movie')
     }
-    console.log(updatedList)
-    setMovies(updatedList);
-    saveManagerMovies(updatedList);
-    toast.success('Movies have been saved');
-    setShowDetail(false)
   };
   // ----- Showtimes helpers -----
   const updateShowtimes = (updater: (prev: Showtime[]) => Showtime[]) => {
     setShowtimes((prev) => updater(prev))
   }
 
-  const handleAddShowtime = (roomId?: number) => {
+  const handleAddShowtime = async (roomId?: number) => {
     const defaultRoomId = roomId ?? 1
-    const defaultMovie = movies[0] ?? MOVIES[0]
+    const defaultMovie = movies[0]
     const defaultCinema = CINEMAS[0]
 
     if (!defaultMovie || !defaultCinema) {
@@ -168,19 +132,22 @@ function ManagerPage() {
 
     const today = new Date().toISOString().slice(0, 10)
 
-    updateShowtimes((prev) => [
-      ...prev,
-      {
-        id: Date.now(),
-        movieId: defaultMovie.id,
-        cinemaId: defaultCinema.id,
-        cinema: defaultCinema,
-        date: today,
-        times: ['09:00'],
-        price: 100000,
-        roomId: defaultRoomId,
-      },
-    ])
+    try {
+        await movieService.createShowtime({
+            movieId: defaultMovie.id,
+            cinemaId: defaultCinema.id,
+            cinema: defaultCinema,
+            date: today,
+            times: ['09:00'],
+            price: 100000,
+            roomId: defaultRoomId,
+        })
+        const s = await movieService.getShowtimes()
+        setShowtimes(s)
+        toast.success('Showtime created')
+    } catch (e) {
+        toast.error('Failed to create showtime')
+    }
   }
 
   const handleChangeShowtime = (
@@ -231,13 +198,22 @@ function ManagerPage() {
     )
   }
 
-  const handleDeleteShowtime = (id: number) => {
-    updateShowtimes((prev) => prev.filter((st) => st.id !== id))
+  const handleDeleteShowtime = async (id: number) => {
+    await movieService.deleteShowtime(id)
+    const s = await movieService.getShowtimes()
+    setShowtimes(s)
+    toast.success('Showtime deleted')
   }
 
-  const handleSaveShowtimes = () => {
-    saveManagerShowtimes(showtimes)
-    toast.success('Showtimes have been saved')
+  const handleSaveShowtimes = async () => {
+    try {
+        await Promise.all(showtimes.map(st => movieService.updateShowtime(st.id, st)))
+        toast.success('Showtimes saved')
+        const s = await movieService.getShowtimes()
+        setShowtimes(s)
+    } catch (e) {
+        toast.error('Failed to save showtimes')
+    }
   }
 
   // Group showtimes by room
@@ -260,9 +236,7 @@ function ManagerPage() {
   )
 
   const getMovieTitle = (movieId: number) => {
-    const movie =
-      movies.find((m) => m.id === movieId) ||
-      MOVIES.find((m) => m.id === movieId)
+    const movie = movies.find((m) => m.id === movieId)
     return movie?.title ?? `Movie #${movieId}`
   }
 
@@ -276,16 +250,23 @@ function ManagerPage() {
     setShowDetail(true); // mở modal nếu cần
   }
 
-  function handleSearch(searchValue = "") {
+  async function handleSearch(searchValue = "") {
     setSearchQuery(searchValue);
-
     const query = searchValue.toLowerCase();
+    
+    // Re-fetch all to filter (simple approach)
+    const allMovies = await movieService.getMovies();
+    
+    if (!query) {
+        setMovies(allMovies);
+        return;
+    }
 
-    const searchResults = MOVIES.filter(movie => {
+    const searchResults = allMovies.filter(movie => {
       return (
         movie.title.toLowerCase().includes(query) ||
         movie.genre.toLowerCase().includes(query) ||
-        movie.synopsis?.toLowerCase().includes(query)
+        (movie.synopsis && movie.synopsis.toLowerCase().includes(query))
       );
     });
 

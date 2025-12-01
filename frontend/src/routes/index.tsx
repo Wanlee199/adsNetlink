@@ -2,14 +2,26 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '../components/ui/button'
 import { Play, Star, Calendar } from 'lucide-react'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '../components/ui/carousel'
-import { MOVIES } from '../data/movies'
 import { MovieCard } from '../components/MovieCard'
+import { useState, useEffect } from 'react'
+import { movieService } from '../services/movie'
+import { Movie } from '../types/movie'
 
 export const Route = createFileRoute('/')({
   component: Home,
 })
 
 function Home() {
+  const [movies, setMovies] = useState<Movie[]>([])
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      const data = await movieService.getMovies()
+      setMovies(data)
+    }
+    fetchMovies()
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -70,7 +82,7 @@ function Home() {
           className="w-full"
         >
           <CarouselContent className="-ml-4">
-            {MOVIES.map((movie, index) => (
+            {movies.map((movie, index) => (
               <CarouselItem key={movie.id} className="pl-4 md:basis-1/2 lg:basis-1/4">
                 <MovieCard movie={movie} index={index} />
               </CarouselItem>

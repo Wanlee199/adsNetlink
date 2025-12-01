@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { getMovieById, getShowtimesByMovieId } from '../data/movies'
+import { useState, useEffect } from 'react'
+import { movieService } from '../services/movie'
+import { Movie, Showtime } from '../types/movie'
 import { Button } from '../components/ui/button'
 import { Play, Star, Clock, Calendar, MapPin } from 'lucide-react'
 import { Badge } from '../components/ui/badge'
@@ -10,8 +12,31 @@ export const Route = createFileRoute('/movies/$movieId')({
 
 function MovieDetails() {
   const { movieId } = Route.useParams()
-  const movie = getMovieById(Number(movieId))
-  const showtimes = getShowtimesByMovieId(Number(movieId))
+  const [movie, setMovie] = useState<Movie | undefined>(undefined)
+  const [showtimes, setShowtimes] = useState<Showtime[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const m = await movieService.getMovieById(Number(movieId))
+        setMovie(m)
+        if (m) {
+          const s = await movieService.getShowtimes(m.id)
+          setShowtimes(s)
+        }
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [movieId])
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center">Loading...</div>
+  }
 
   if (!movie) {
     return (
