@@ -40,14 +40,14 @@ function ManagerPage() {
   const [searchQuery, setSearchQuery] = React.useState('')
 
   React.useEffect(() => {
-    // if (!user) {
-    //   navigate({ to: '/login', search: { redirect: '/manager' } })
-    //   return
-    // }
-    // if (!user.roles?.includes('MANAGER')) {
-    //   navigate({ to: '/' })
-    //   return
-    // }
+    if (!user) {
+      navigate({ to: '/login', search: { redirect: '/manager' } })
+      return
+    }
+    if (!user.roles?.includes('MANAGER')) {
+      navigate({ to: '/' })
+      return
+    }
     const fetchData = async () => {
       const m = await movieService.getMovies()
       setMovies(m)
@@ -253,10 +253,10 @@ function ManagerPage() {
   async function handleSearch(searchValue = "") {
     setSearchQuery(searchValue);
     const query = searchValue.toLowerCase();
-    
+
     // Re-fetch all to filter (simple approach)
     const allMovies = await movieService.getMovies();
-    
+
     if (!query) {
         setMovies(allMovies);
         return;
@@ -698,184 +698,7 @@ function ManagerPage() {
       {/*  </CardContent>*/}
       {/*</Card>*/}
 
-      {/* Showtimes by room (CRUD) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Showtimes by Room</CardTitle>
-          <CardDescription>
-            View and manage which showtimes each room currently has (based on editable showtime
-            data).
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {roomShowtimes.map((room) => (
-            <div key={room.roomId} className="border rounded-lg p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-base">Room #{room.roomId}</h3>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => handleAddShowtime(room.roomId)}
-                >
-                  Add showtime for this room
-                </Button>
-              </div>
 
-              {room.items.map((st) => (
-                <div
-                  key={st.id}
-                  className="grid gap-3 md:grid-cols-6 border-t pt-3 mt-3"
-                >
-                  {/* Movie */}
-                  <div className="flex flex-col gap-1 md:col-span-2">
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Movie
-                    </span>
-                    <select
-                      className="border rounded-md px-2 py-1 text-sm bg-background"
-                      value={st.movieId}
-                      onChange={(e) =>
-                        handleChangeShowtime(
-                          st.id,
-                          'movieId',
-                          Number(e.target.value),
-                        )
-                      }
-                    >
-                      {movies.map((m) => (
-                        <option key={m.id} value={m.id}>
-                          {m.title}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Cinema */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Cinema
-                    </span>
-                    <select
-                      className="border rounded-md px-2 py-1 text-sm bg-background"
-                      value={st.cinemaId}
-                      onChange={(e) =>
-                        handleChangeShowtime(
-                          st.id,
-                          'cinemaId',
-                          Number(e.target.value),
-                        )
-                      }
-                    >
-                      {CINEMAS.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Date */}
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Date
-                    </span>
-                    <Input
-                      type="date"
-                      value={st.date}
-                      onChange={(e) =>
-                        handleChangeShowtime(st.id, 'date', e.target.value)
-                      }
-                    />
-                  </div>
-
-                  {/* Times */}
-                  <div className="flex flex-col gap-1 md:col-span-2">
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      Showtimes (comma separated)
-                    </span>
-                    <Input
-                      value={st.times.join(', ')}
-                      onChange={(e) =>
-                        handleChangeShowtime(st.id, 'times', e.target.value)
-                      }
-                      placeholder="10:00, 13:30, 17:00"
-                    />
-                  </div>
-
-                  {/* Price + Room + Delete */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs font-semibold text-muted-foreground">
-                        Price (VND)
-                      </span>
-                      <Input
-                        type="number"
-                        value={st.price}
-                        onChange={(e) =>
-                          handleChangeShowtime(
-                            st.id,
-                            'price',
-                            Number(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs font-semibold text-muted-foreground">
-                        Room
-                      </span>
-                      <Input
-                        type="number"
-                        value={st.roomId ?? ''}
-                        onChange={(e) =>
-                          handleChangeShowtime(
-                            st.id,
-                            'roomId',
-                            Number(e.target.value),
-                          )
-                        }
-                      />
-                    </div>
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      className="mt-1"
-                      onClick={() => handleDeleteShowtime(st.id)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ))}
-
-          {roomShowtimes.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              No showtime data yet (SHOWTIMES is empty or has no roomId).
-            </p>
-          )}
-
-          {/* Global add & save for showtimes */}
-          <div className="flex justify-end gap-2 pt-4 border-t mt-2">
-            <Button
-              size="sm"
-              variant="outline"
-              className="bg-gray-100 text-gray-800 hover:bg-gray-200 border-gray-300"
-              onClick={() => handleAddShowtime()}
-            >
-              Add Showtime
-            </Button>
-            <Button
-              size="sm"
-              className="bg-emerald-500 text-white hover:bg-emerald-600"
-              onClick={handleSaveShowtimes}
-            >
-              Save showtimes
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

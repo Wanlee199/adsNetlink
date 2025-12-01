@@ -249,7 +249,7 @@ function HeaderManager() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
       <div className="container flex h-16 items-center px-4 md:px-8 gap-4">
         {/* Logo */}
-        <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
+        <Link to="/manager" className="flex items-center space-x-2 flex-shrink-0">
           <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-orange-500 rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">P</span>
           </div>
@@ -264,7 +264,7 @@ function HeaderManager() {
             Movie Management
           </Link>
           {user && (
-            <Link to="/my-tickets" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-600 [&.active]:bg-red-100 dark:[&.active]:bg-red-900/30 [&.active]:text-red-600">
+            <Link to="/room-manager" className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-red-50 dark:hover:bg-red-950/20 hover:text-red-600 [&.active]:bg-red-100 dark:[&.active]:bg-red-900/30 [&.active]:text-red-600">
               Room Management
             </Link>
           )}
@@ -343,31 +343,38 @@ function HeaderManager() {
 function Footer() {
   return (
     <footer className="border-t bg-muted py-12 text-muted-foreground">
-      <div className="container px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-foreground">PTIT Cinema</h3>
-          <p className="text-sm">
-            The best cinema experience in town. Watch the latest blockbusters with premium quality.
-          </p>
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-foreground">Movies</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/" hash="now-showing" className="hover:text-primary">Now Showing</Link></li>
-            <li><Link to="/" hash="now-showing" className="hover:text-primary">Coming Soon</Link></li>
-            <li><Link to="/" hash="now-showing" className="hover:text-primary">Top Rated</Link></li>
-          </ul>
-        </div>
-        <div className="space-y-4">
-          <h3 className="text-lg font-bold text-foreground">Support</h3>
-          <ul className="space-y-2 text-sm">
-            <li><Link to="/" className="hover:text-primary">FAQ</Link></li>
-            <li><Link to="/" className="hover:text-primary">Contact Us</Link></li>
-            <li><Link to="/" className="hover:text-primary">Terms of Service</Link></li>
-            <li><Link to="/" className="hover:text-primary">Privacy Policy</Link></li>
-          </ul>
-        </div>
-      </div>
+<div className="flex float-right">
+  <div className="container px-4 md:px-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="space-y-4">
+      <h3 className="text-lg font-bold text-foreground">PTIT Cinema</h3>
+      <p className="text-sm">
+        The best cinema experience in town. Watch the latest blockbusters with premium quality.
+      </p>
+    </div>
+    <div className="space-y-4">
+      <h3 className="text-lg font-bold text-foreground">Movies</h3>
+      <ul className="space-y-2 text-sm">
+        <li><Link to="/" hash="now-showing" className="hover:text-primary">Now Showing</Link></li>
+        <li><Link to="/" hash="now-showing" className="hover:text-primary">Coming Soon</Link></li>
+        <li><Link to="/" hash="now-showing" className="hover:text-primary">Top Rated</Link></li>
+      </ul>
+    </div>
+  </div>
+  <div className="container px-4 md:px-8 grid grid-cols-1 md:grid-cols-1 gap-4">
+    <h3 className="text-lg font-bold text-foreground">Support</h3>
+    <ul className="text-sm flex">
+      <li><p className=" mr-4 hover:text-primary">Contact Us: </p></li>
+      <li>
+        <p> Nguyễn Thị Thu Hiên , Email: hienntt.k24dtcn191@stu.ptit.edu.vn</p>
+        <p> Nguyễn Thu Hiền , Email: hiennt.k24dtcn193@stu.ptit.edu.vn</p>
+        <p> Nguyễn Ngọc Mạnh , Email:manhnn.k24dtcn211@stu.ptit.edu.vn</p>
+        <p> Hồ Hữu Phước , Email: phuochh.k24dtcn217@stu.ptit.edu.vn</p>
+        <p> Nguyễn Đức Phương , Email: phuongnd.k24dtcn218@stu.ptit.edu.vn</p>
+        <p> Lê Đức Minh Quân , Email: quanldm.k24dtcn220@stu.ptit.edu.vn</p>
+      </li>
+    </ul>
+  </div>
+</div>
       <div className="container px-4 md:px-8 mt-12 pt-8 border-t text-center text-sm">
         &copy; {new Date().getFullYear()} PTIT Cinema. All rights reserved.
       </div>
@@ -380,7 +387,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 
   const pathname = routerState.location.pathname;
 
-  const isManager = pathname.startsWith('/manager');
+  const isManager = pathname.startsWith('/manager') || pathname.startsWith('/room-manager');
   return (
     <html>
       <head>
@@ -391,7 +398,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <main className="flex-1">
             {children}
         </main>
-        <Footer />
+      {!isManager && <Footer />}
         <Toaster />
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools buttonPosition="bottom-left" />
