@@ -27,10 +27,10 @@ public class UserRepository  implements IUserRepository {
         try{
             return sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
                 User user = new User();
-                user.setId(re.getInt("id"));
+                user.setId(re.getInt("userid"));
                 user.setEmail(re.getString("email"));
                 user.setPassword(re.getString("password"));
-                user.setFullName(re.getString("full_name"));
+                user.setFullName(re.getString("fullname"));
                 return user;
             }, email);
         }
@@ -46,11 +46,11 @@ public class UserRepository  implements IUserRepository {
         try{
             return sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
                 User user = new User();
-                user.setId(re.getInt("id"));
+                user.setId(re.getInt("userid"));
                 user.setUserName(re.getString("username"));
                 user.setEmail(re.getString("email"));
                 user.setPassword(re.getString("password"));
-                user.setFullName(re.getString("full_name"));
+                user.setFullName(re.getString("fullname"));
                 user.setPhone(re.getString("phone"));
                 return user;
             }, username);
@@ -66,7 +66,7 @@ public class UserRepository  implements IUserRepository {
         User userSaved = findByEmail(user.getEmail());
         int userId = userSaved.getId();
         
-        String sqlRoles = "INSERT INTO [UserRole] (UserId, RoleId) VALUES (?, 1)";
+        String sqlRoles = "INSERT INTO [UserRole] (UserId, RoleId, Status) VALUES (?, 1, 1)";
         sqlJdbcTemplate.update(sqlRoles, userId);
         return userSaved;
     }
