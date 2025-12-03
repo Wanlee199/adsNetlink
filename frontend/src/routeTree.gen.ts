@@ -13,6 +13,7 @@ import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as MyTicketsRouteImport } from './routes/my-tickets'
+import { Route as ManagerRouteImport } from './routes/manager'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MoviesMovieIdRouteImport } from './routes/movies.$movieId'
@@ -37,6 +38,11 @@ const PaymentRoute = PaymentRouteImport.update({
 const MyTicketsRoute = MyTicketsRouteImport.update({
   id: '/my-tickets',
   path: '/my-tickets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ManagerRoute = ManagerRouteImport.update({
+  id: '/manager',
+  path: '/manager',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -68,6 +74,7 @@ const BookingSuccessBookingIdRoute = BookingSuccessBookingIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
   '/my-tickets': typeof MyTicketsRoute
   '/payment': typeof PaymentRoute
   '/register': typeof RegisterRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
   '/my-tickets': typeof MyTicketsRoute
   '/payment': typeof PaymentRoute
   '/register': typeof RegisterRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/manager': typeof ManagerRoute
   '/my-tickets': typeof MyTicketsRoute
   '/payment': typeof PaymentRoute
   '/register': typeof RegisterRoute
@@ -104,6 +113,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/manager'
     | '/my-tickets'
     | '/payment'
     | '/register'
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/manager'
     | '/my-tickets'
     | '/payment'
     | '/register'
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/login'
+    | '/manager'
     | '/my-tickets'
     | '/payment'
     | '/register'
@@ -138,6 +150,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LoginRoute: typeof LoginRoute
+  ManagerRoute: typeof ManagerRoute
   MyTicketsRoute: typeof MyTicketsRoute
   PaymentRoute: typeof PaymentRoute
   RegisterRoute: typeof RegisterRoute
@@ -175,6 +188,13 @@ declare module '@tanstack/react-router' {
       path: '/my-tickets'
       fullPath: '/my-tickets'
       preLoaderRoute: typeof MyTicketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/manager': {
+      id: '/manager'
+      path: '/manager'
+      fullPath: '/manager'
+      preLoaderRoute: typeof ManagerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -218,6 +238,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LoginRoute: LoginRoute,
+  ManagerRoute: ManagerRoute,
   MyTicketsRoute: MyTicketsRoute,
   PaymentRoute: PaymentRoute,
   RegisterRoute: RegisterRoute,
