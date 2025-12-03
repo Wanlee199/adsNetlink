@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.List;
+import java.util.Collections;
 
 @Service
 public class BookingService implements IBookingService {
@@ -20,7 +22,6 @@ public class BookingService implements IBookingService {
         this.bookingRepository = bookingRepository;
     }
     
-    // Đảm bảo cả hai thao tác (saveBooking và saveBookingDetails) thành công hoặc thất bại cùng lúc
     @Transactional
     @Override
     public Optional<BookingResponse> createBooking(String userEmail, BookingRequest request) {
@@ -30,26 +31,19 @@ public class BookingService implements IBookingService {
         }
         int userId = userIdOptional.get();
 
-        //Kiểm tra MovieId (cần cho Response, không cần thiết cho Booking Entity)
         Optional<Integer> movieIdOptional = bookingRepository.findMovieIdByShowtimeId(request.getShowtimeId());
         if (movieIdOptional.isEmpty()) {
             return Optional.empty(); 
         }
         int movieId = movieIdOptional.get();
 
-        // **Lưu ý quan trọng: Thiếu logic kiểm tra ghế đã đặt chưa (Concurrency check)!**
-        // Trong môi trường production, bạn cần kiểm tra lại trạng thái ghế tại đây.
-
-        //Lưu Booking chính
         Booking savedBooking = bookingRepository.saveBooking(userId, request);
         int bookingId = savedBooking.getId();
 
         if (bookingId == -1) return Optional.empty();
 
-        //Lưu BookingDetails (Chi tiết ghế)
         bookingRepository.saveBookingDetails(bookingId, request.getSeats());
 
-        //Tạo Response
         BookingResponse response = new BookingResponse();
         response.setId("BK" + bookingId); 
         response.setUserId(userId);
@@ -66,5 +60,14 @@ public class BookingService implements IBookingService {
         response.setQrCode("PTIT_CINEMA_BK" + bookingId); 
         
         return Optional.of(response);
+    }
+
+    @Override
+    public List<BookingResponse> getUserBookings(String userEmail) {
+        Optional<Integer> userIdOptional = bookingRepository.findUserIdByEmail(userEmail);
+        if (userIdOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return bookingRepository.findBookingsByUserId(userIdOptional.get());
     }
 }

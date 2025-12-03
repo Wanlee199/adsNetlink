@@ -18,7 +18,7 @@ export const Route = createFileRoute('/login')({
 })
 
 const loginSchema = z.object({
-  usernameOrEmail: z.string().min(1, 'Username is required'),
+  username: z.string().min(1, 'Username is required'),
   password: z.string().min(1, 'Password is required'),
 })
 
@@ -29,7 +29,7 @@ function LoginPage() {
 
   const form = useForm({
     defaultValues: {
-      usernameOrEmail: '',
+      username: '',
       password: '',
     },
     // @ts-ignore
@@ -76,9 +76,9 @@ function LoginPage() {
             className="space-y-4"
           >
             <form.Field
-              name="usernameOrEmail"
+              name="username"
               validators={{
-                onChange: loginSchema.shape.usernameOrEmail,
+                onChange: loginSchema.shape.username,
               }}
               children={(field) => (
                 <FieldInfo field={field} label="Username" placeholder="Please input Username" />

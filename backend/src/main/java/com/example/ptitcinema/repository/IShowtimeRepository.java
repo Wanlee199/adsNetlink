@@ -13,6 +13,7 @@ public interface IShowtimeRepository {
     Cinema findCinemaByRoomId(int roomId);
 
     int saveShowtime(int movieId, int roomId, java.time.LocalDate date, java.time.LocalTime time, java.math.BigDecimal price); 
+    void updateShowtime(Showtime showtime);
     boolean checkRoomExists(int roomId);
 
     void deleteBookingDetailsByShowtimeId(int showtimeId);

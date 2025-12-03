@@ -3,6 +3,7 @@ import { bookingService } from '../services/booking'
 import { Button } from '../components/ui/button'
 import { Card } from '../components/ui/card'
 import { CheckCircle2, Download, Home, Calendar, MapPin, Clock, Ticket } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
 
 export const Route = createFileRoute('/booking-success/$bookingId')({
   component: BookingSuccess,
@@ -10,7 +11,19 @@ export const Route = createFileRoute('/booking-success/$bookingId')({
 
 function BookingSuccess() {
   const { bookingId } = Route.useParams()
-  const booking = bookingService.getBookingById(bookingId)
+  
+  const { data: booking, isLoading } = useQuery({
+    queryKey: ['booking', bookingId],
+    queryFn: () => bookingService.getBookingById(bookingId),
+  })
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
 
   if (!booking) {
     return (

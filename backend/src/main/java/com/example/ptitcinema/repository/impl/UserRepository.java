@@ -21,18 +21,32 @@ public class UserRepository  implements IUserRepository {
         this.sqlJdbcTemplate = sqlJdbcTemplate;
     }
 
+    private List<String> getRolesByUserId(int userId) {
+        String sql = "SELECT r.Name FROM Role r JOIN UserRole ur ON r.Id = ur.RoleId WHERE ur.UserId = ?";
+        try {
+            return sqlJdbcTemplate.queryForList(sql, String.class, userId);
+        } catch (Exception e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
     @Override
     public User findByEmail(String email){
         String sqlQuery = "SELECT * FROM [User] WHERE email = ?";
         try{
-            return sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
-                User user = new User();
-                user.setId(re.getInt("userid"));
-                user.setEmail(re.getString("email"));
-                user.setPassword(re.getString("password"));
-                user.setFullName(re.getString("fullname"));
-                return user;
+            User user = sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
+                User u = new User();
+                u.setId(re.getInt("userid"));
+                u.setEmail(re.getString("email"));
+                u.setPassword(re.getString("password"));
+                u.setFullName(re.getString("fullname"));
+                return u;
             }, email);
+            
+            if (user != null) {
+                user.setRoles(getRolesByUserId(user.getId()));
+            }
+            return user;
         }
         catch (Exception e){
             return null;
@@ -44,16 +58,21 @@ public class UserRepository  implements IUserRepository {
     public User findByUsername(String username){
         String sqlQuery = "SELECT * FROM [User] WHERE username = ?";
         try{
-            return sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
-                User user = new User();
-                user.setId(re.getInt("userid"));
-                user.setUserName(re.getString("username"));
-                user.setEmail(re.getString("email"));
-                user.setPassword(re.getString("password"));
-                user.setFullName(re.getString("fullname"));
-                user.setPhone(re.getString("phone"));
-                return user;
+            User user = sqlJdbcTemplate.queryForObject(sqlQuery, (re, rowNum) -> {
+                User u = new User();
+                u.setId(re.getInt("userid"));
+                u.setUserName(re.getString("username"));
+                u.setEmail(re.getString("email"));
+                u.setPassword(re.getString("password"));
+                u.setFullName(re.getString("fullname"));
+                u.setPhone(re.getString("phone"));
+                return u;
             }, username);
+
+            if (user != null) {
+                user.setRoles(getRolesByUserId(user.getId()));
+            }
+            return user;
         }
         catch (Exception e){
             return null;

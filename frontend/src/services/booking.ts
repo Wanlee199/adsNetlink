@@ -32,28 +32,24 @@ export const bookingService = {
   },
   
   getBookingById: async (id: string): Promise<Booking | undefined> => {
-    // No specific API for single booking by ID in docs yet (except maybe admin?), 
-    // but usually it's useful. Let's assume /bookings/{id} or just use local for now if not needed.
-    // Actually docs say /bookings/my-bookings returns list.
-    // Let's try to find in local first or implement if needed.
-    // For now, let's keep it simple and use local or generic get.
     try {
-        // If we had an endpoint: return await httpClient.get<Booking>(`/bookings/${id}`);
-        // But since we don't have it in docs explicitly as "Get Booking Details" for user (only list),
-        // let's just use the list or mock.
-        // Actually, let's just use the mock logic for now as it's safe.
-        const bookings = bookingService.getLocalBookings();
-        return bookings.find(b => b.id === id);
+      // Since we don't have a specific GET /bookings/:id endpoint yet,
+      // we'll fetch all user bookings and find the one we need.
+      // This works because the user just created the booking, so it should be in their list.
+      const bookings = await bookingService.getUserBookings();
+      return bookings.find(b => b.id === id);
     } catch (error) {
-        return undefined;
+      console.error('Error fetching booking by ID:', error);
+      return undefined;
     }
   },
   
-  getUserBookings: async (userId: number): Promise<Booking[]> => {
+  getUserBookings: async (userId?: number): Promise<Booking[]> => {
     try {
       return await httpClient.get<Booking[]>('/bookings/my-bookings');
     } catch (error) {
       console.warn('API getUserBookings failed, using mock:', error);
+      if (!userId) return [];
       return bookingService.getLocalBookings().filter(b => b.userId === userId);
     }
   },

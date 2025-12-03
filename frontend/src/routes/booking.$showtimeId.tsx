@@ -1,14 +1,15 @@
-import { createFileRoute, useNavigate, Link } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { useAtom } from 'jotai'
 import { userAtom } from '../store/auth'
 import { movieService } from '../services/movie'
 import { bookingService } from '../services/booking'
 import { Movie, Showtime } from '../types/movie'
-import { Seat, SeatStatus, SeatType } from '../types/movie'
 import { Button } from '../components/ui/button'
 import { ArrowLeft, Check } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 export const Route = createFileRoute('/booking/$showtimeId')({
   component: SeatSelection,
@@ -18,9 +19,16 @@ function SeatSelection() {
   const { showtimeId } = Route.useParams()
   const navigate = useNavigate()
   const [user] = useAtom(userAtom)
+  const [hydrated, setHydrated] = useState(false)
   
+  // Wait for atoms to hydrate from localStorage
   useEffect(() => {
-    if (!user) {
+    setHydrated(true)
+  }, [])
+  
+  // Only check auth after hydration
+  useEffect(() => {
+    if (hydrated && !user) {
       navigate({ 
         to: '/login', 
         search: { 
@@ -28,7 +36,7 @@ function SeatSelection() {
         } 
       })
     }
-  }, [user, navigate, showtimeId])
+  }, [hydrated, user, navigate, showtimeId])
 
   const [showtime, setShowtime] = useState<Showtime | undefined>(undefined)
   const [movie, setMovie] = useState<Movie | undefined>(undefined)
@@ -62,6 +70,48 @@ function SeatSelection() {
   }, [showtimeId])
 
   const [selectedSeats, setSelectedSeats] = useState<Set<string>>(new Set())
+
+  // Booking mutation
+  const createBookingMutation = useMutation({
+    mutationFn: bookingService.createBooking,
+    onSuccess: (booking) => {
+      toast.success('Đặt vé thành công!')
+      navigate({ 
+        to: '/booking-success/$bookingId', 
+        params: { bookingId: booking.id } 
+      })
+    },
+    onError: (error: any) => {
+      toast.error('Đặt vé thất bại: ' + (error.message || 'Vui lòng thử lại'))
+    }
+  })
+
+  const handleConfirmBooking = () => {
+    if (!showtime || !movie || !user) return
+
+    if (selectedSeats.size === 0) {
+      toast.error('Vui lòng chọn ghế')
+      return
+    }
+
+    // Confirm before booking
+    if (!window.confirm(`Xác nhận đặt ${selectedSeats.size} ghế với tổng tiền ${totalPrice.toLocaleString('vi-VN')} VNĐ?`)) {
+      return
+    }
+
+    createBookingMutation.mutate({
+      userId: user.id,
+      movieId: movie.id,
+      showtimeId: showtime.id,
+      cinemaName: showtime.cinema?.name || 'PTIT Cinema',
+      movieTitle: movie.title,
+      date: showtime.date,
+      time: showtime.times?.[0] || '10:00', // Safe access with optional chaining
+      seats: Array.from(selectedSeats),
+      totalPrice: totalPrice,
+      status: 'confirmed'
+    })
+  }
 
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>
@@ -252,27 +302,14 @@ function SeatSelection() {
                     </div>
                   </div>
 
-                  <Link
-                    to="/payment"
-                    search={{
-                      showtimeId: showtime.id,
-                      movieId: movie.id,
-                      movieTitle: movie.title,
-                      cinemaName: showtime.cinema.name,
-                      date: showtime.date,
-                      time: '10:00', // In real app, this would be selected time
-                      seats: Array.from(selectedSeats),
-                      totalPrice
-                    }}
-                    className="block"
+                  <Button 
+                    onClick={handleConfirmBooking}
+                    disabled={createBookingMutation.isPending}
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                    size="lg"
                   >
-                    <Button 
-                      className="w-full bg-red-600 hover:bg-red-700 text-white"
-                      size="lg"
-                    >
-                      Continue to Payment
-                    </Button>
-                  </Link>
+                    {createBookingMutation.isPending ? 'Đang xử lý...' : 'Xác nhận đặt vé'}
+                  </Button>
                 </>
               )}
             </div>

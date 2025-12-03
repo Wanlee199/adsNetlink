@@ -8,14 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -76,6 +69,18 @@ public class ShowtimeController {
         
         // 3. Trả về 201 Created với danh sách các ID đã tạo
         return new ResponseEntity<>(createdIds, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Update Showtime (MANAGER/ADMIN)", description = "Updates an existing showtime by ID.")
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateShowtime(@PathVariable int id, @RequestBody ShowtimeRequest request) {
+        boolean updated = showtimeService.updateShowtime(id, request);
+        
+        if (updated) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @Operation(summary = "Delete Showtime (MANAGER/ADMIN)", description = "Deletes a showtime by ID, including all associated bookings and booking details.")

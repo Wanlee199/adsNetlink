@@ -2,7 +2,7 @@ import { httpClient } from '../lib/http';
 import { AuthResponse, LoginRequest, RegisterRequest, User } from '../types/auth';
 import { mockService } from './mock';
 
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 export const authService = {
   login: async (credentials: LoginRequest): Promise<AuthResponse> => {

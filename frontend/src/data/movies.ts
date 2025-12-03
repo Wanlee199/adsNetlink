@@ -60,9 +60,7 @@ export const MOVIES: Movie[] = [
 ]
 
 export const CINEMAS: Cinema[] = [
-  { id: 1, name: "PTIT Cinema Central", location: "Hanoi Center" },
-  { id: 2, name: "PTIT Cinema North", location: "Cau Giay District" },
-  { id: 3, name: "PTIT Cinema South", location: "Thanh Xuan District" }
+  { id: 1, name: "PTIT Cinema", location: "96 Định Công, Hoàng Mai, Hà Nội" }
 ]
 
 export const SHOWTIMES: Showtime[] = [
@@ -79,11 +77,11 @@ export const SHOWTIMES: Showtime[] = [
   {
     id: 2,
     movieId: 1,
-    cinemaId: 2,
-    cinema: CINEMAS[1],
-    date: "2024-11-23",
+    cinemaId: 1,
+    cinema: CINEMAS[0],
+    date: "2024-11-24",
     times: ["11:00", "14:00", "18:30", "21:00"],
-    price: 100000,
+    price: 120000,
     roomId: 2
   },
   {

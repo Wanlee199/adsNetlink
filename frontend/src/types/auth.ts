@@ -12,20 +12,19 @@ export interface User {
 }
 
 export interface LoginRequest {
-  usernameOrEmail: string;
-  password?: string;
+  username: string;
+  password: string;
 }
 
 export interface RegisterRequest {
   username: string;
   email: string;
-  password?: string;
+  password: string;
   fullName: string;
   phone?: string;
 }
 
 export interface AuthResponse {
   accessToken: string;
-  refreshToken?: string;
   user: User;
 }

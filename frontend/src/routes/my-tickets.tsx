@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { bookingService } from '../services/booking'
 import { Booking } from '../types/booking'
@@ -7,6 +7,9 @@ import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Calendar, Clock, MapPin, Ticket, QrCode, ChevronRight } from 'lucide-react'
 import { cn } from '../lib/utils'
+import { useQuery } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
+import { userAtom } from '../store/auth'
 
 export const Route = createFileRoute('/my-tickets')({
   component: MyTickets,
@@ -16,15 +19,37 @@ type FilterType = 'all' | 'upcoming' | 'past'
 
 function MyTickets() {
   const [filter, setFilter] = useState<FilterType>('all')
-  const [allBookings, setAllBookings] = useState<Booking[]>([])
+  const [user] = useAtom(userAtom)
+  const navigate = useNavigate()
+  const [hydrated, setHydrated] = useState(false)
 
+  // Wait for hydration
   useEffect(() => {
-    const fetchBookings = async () => {
-        const bookings = await bookingService.getUserBookings()
-        setAllBookings(bookings)
-    }
-    fetchBookings()
+    setHydrated(true)
   }, [])
+
+  // Auth check
+  useEffect(() => {
+    if (hydrated && !user) {
+      navigate({ to: '/login', search: { redirect: '/my-tickets' } })
+    }
+  }, [hydrated, user, navigate])
+
+  const { data: allBookings = [], isLoading } = useQuery({
+    queryKey: ['my-bookings', user?.id],
+    queryFn: () => bookingService.getUserBookings(user?.id || 0),
+    enabled: !!user, // Only fetch if user exists
+  })
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    )
+  }
+
+  if (!user) return null // Will redirect
 
   const now = new Date()
   

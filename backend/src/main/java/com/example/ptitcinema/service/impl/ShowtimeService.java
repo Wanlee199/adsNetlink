@@ -149,6 +149,48 @@ public class ShowtimeService implements IShowtimeService {
 
     @Transactional
     @Override
+    public boolean updateShowtime(int id, ShowtimeRequest request) {
+        // 1. Kiểm tra tồn tại Showtime
+        Optional<Showtime> showtimeOptional = showtimeRepository.findShowtimeById(id);
+        if (showtimeOptional.isEmpty()) {
+            return false;
+        }
+        Showtime showtime = showtimeOptional.get();
+
+        // 2. Validation
+        if (movieRepository.findById(request.getMovieId()).isEmpty()) {
+            return false; // Movie không tồn tại
+        }
+        if (!showtimeRepository.checkRoomExists(request.getRoomId())) {
+            return false; // Room không tồn tại
+        }
+
+        try {
+            LocalDate date = LocalDate.parse(request.getDate());
+            // Lấy giờ đầu tiên trong danh sách (vì update thường chỉ update 1 suất chiếu cụ thể)
+            if (request.getTimes() == null || request.getTimes().isEmpty()) {
+                return false;
+            }
+            LocalTime time = LocalTime.parse(request.getTimes().get(0), timeFormatter);
+
+            // 3. Cập nhật thông tin
+            showtime.setMovieId(request.getMovieId());
+            showtime.setRoomId(request.getRoomId());
+            showtime.setDate(date);
+            showtime.setTime(time);
+            showtime.setPrice(request.getPrice());
+
+            // 4. Lưu xuống DB
+            showtimeRepository.updateShowtime(showtime);
+            return true;
+
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    @Transactional
+    @Override
     public boolean deleteShowtime(int id) {
         // 1. Kiểm tra tồn tại
         if (showtimeRepository.findShowtimeById(id).isEmpty()) {

@@ -84,4 +84,69 @@ public class BookingRepository implements IBookingRepository {
             
         sqlJdbcTemplate.batchUpdate(sql, batchArgs);
     }
+
+    @Override
+    public List<com.example.ptitcinema.model.dto.BookingResponse> findBookingsByUserId(int userId) {
+        // Corrected SQL Query with proper table and column names
+        String sql = "SELECT b.Id, b.UserId, b.ShowtimeId, b.Status, b.CreatedAt, " +
+                     "m.Id as MovieId, m.Title as MovieTitle, " +
+                     "c.CinemaName, " +
+                     "s.Date as ShowDate, s.Time as StartTime, s.Price, " +
+                     "bd.SeatNumber " +
+                     "FROM Booking b " +
+                     "JOIN Showtime s ON b.ShowtimeId = s.Id " +
+                     "JOIN Movie m ON s.MovieId = m.Id " +
+                     "JOIN CinemaRoom r ON s.RoomId = r.Id " +
+                     "JOIN Cinema c ON r.CinemaId = c.Id " +
+                     "LEFT JOIN BookingDetails bd ON b.Id = bd.BookingId " +
+                     "WHERE b.UserId = ? " +
+                     "ORDER BY b.CreatedAt DESC";
+
+        return sqlJdbcTemplate.query(sql, new Object[]{userId}, rs -> {
+            java.util.Map<Integer, com.example.ptitcinema.model.dto.BookingResponse> map = new java.util.LinkedHashMap<>();
+            
+            while (rs.next()) {
+                int bookingId = rs.getInt("Id");
+                com.example.ptitcinema.model.dto.BookingResponse response = map.get(bookingId);
+                
+                if (response == null) {
+                    response = new com.example.ptitcinema.model.dto.BookingResponse();
+                    response.setId("BK" + bookingId);
+                    response.setUserId(rs.getInt("UserId"));
+                    response.setMovieId(rs.getInt("MovieId"));
+                    response.setShowtimeId(rs.getInt("ShowtimeId"));
+                    response.setCinemaName(rs.getString("CinemaName"));
+                    response.setMovieTitle(rs.getString("MovieTitle"));
+                    
+                    // Format Date/Time
+                    java.sql.Date showDate = rs.getDate("ShowDate");
+                    java.sql.Time startTime = rs.getTime("StartTime");
+                    response.setDate(showDate != null ? showDate.toString() : "");
+                    response.setTime(startTime != null ? startTime.toString().substring(0, 5) : "");
+                    
+                    response.setStatus(rs.getInt("Status") == 0 ? "pending" : "confirmed");
+                    
+                    Timestamp createdAt = rs.getTimestamp("CreatedAt");
+                    response.setCreatedAt(createdAt != null ? createdAt.toLocalDateTime() : null);
+                    response.setQrCode("PTIT_CINEMA_BK" + bookingId);
+                    
+                    response.setSeats(new java.util.ArrayList<>());
+                    response.setTotalPrice(java.math.BigDecimal.ZERO); 
+                    
+                    map.put(bookingId, response);
+                }
+                
+                String seatNumber = rs.getString("SeatNumber");
+                if (seatNumber != null) {
+                    response.getSeats().add(seatNumber);
+                    // Calculate price: seats * price
+                    java.math.BigDecimal price = rs.getBigDecimal("Price");
+                    if (price != null) {
+                        response.setTotalPrice(price.multiply(new java.math.BigDecimal(response.getSeats().size())));
+                    }
+                }
+            }
+            return new java.util.ArrayList<>(map.values());
+        });
+    }
 }

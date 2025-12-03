@@ -269,4 +269,17 @@ public class MovieService implements IMovieService {
         // Kiểm tra lại sau khi xóa (có thể bỏ qua bước này nếu tin tưởng vào transaction)
         return movieRepository.findById(id).isEmpty();
     }
+
+    @Override
+    public List<MovieListItemDto> searchMovies(String query) {
+        List<Movie> movies = movieRepository.searchMovies(query);
+        
+        return movies.stream()
+                .map(movie -> {
+                    String genre = movieRepository.findGenresByMovieId(movie.getId());
+                    String durationStr = formatDuration(movie.getDuration());
+                    return new MovieListItemDto(movie, genre, durationStr);
+                })
+                .collect(Collectors.toList());
+    }
 }

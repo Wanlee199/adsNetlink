@@ -216,4 +216,11 @@ public class MovieRepository implements IMovieRepository {
         String sql = "DELETE FROM Movie WHERE Id = ?";
         sqlJdbcTemplate.update(sql, movieId);
     }
+
+    @Override
+    public List<Movie> searchMovies(String query) {
+        String sql = "SELECT * FROM Movie WHERE Title LIKE ?";
+        String searchPattern = "%" + query + "%";
+        return sqlJdbcTemplate.query(sql, movieRowMapper, searchPattern);
+    }
 }

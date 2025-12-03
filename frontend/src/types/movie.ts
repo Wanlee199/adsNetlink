@@ -25,7 +25,7 @@ export interface Showtime {
   cinemaId: number
   cinema: Cinema
   date: string
-  times: string[]
+  times?: string[]  // Optional since API might not always include this
   price: number
   roomId?: number
 }

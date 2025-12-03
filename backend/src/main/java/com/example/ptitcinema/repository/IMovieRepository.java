@@ -25,4 +25,6 @@ public interface IMovieRepository {
 
     void deleteMovieById(int movieId);
     void deleteShowtimesByMovieId(int movieId);
+    
+    List<Movie> searchMovies(String query);
 }

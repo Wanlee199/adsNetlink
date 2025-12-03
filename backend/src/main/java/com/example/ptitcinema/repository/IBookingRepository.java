@@ -1,6 +1,7 @@
 package com.example.ptitcinema.repository;
 
 import com.example.ptitcinema.model.dto.BookingRequest;
+import com.example.ptitcinema.model.dto.BookingResponse;
 import com.example.ptitcinema.model.Booking;
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +15,7 @@ public interface IBookingRepository {
     
     // Lưu BookingDetails
     void saveBookingDetails(int bookingId, List<String> seatNumbers);
+
+    // Lấy danh sách booking của user
+    List<BookingResponse> findBookingsByUserId(int userId);
 }

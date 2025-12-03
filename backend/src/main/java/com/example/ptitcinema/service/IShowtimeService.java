@@ -11,5 +11,6 @@ public interface IShowtimeService {
     List<ShowtimeDto> getShowtimesByMovie(int movieId);
     Optional<ShowtimeDetailDto> getShowtimeDetail(int showtimeId);
     List<Integer> createShowtimes(ShowtimeRequest request);
+    boolean updateShowtime(int id, ShowtimeRequest request);
     boolean deleteShowtime(int id);
 }

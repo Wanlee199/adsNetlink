@@ -78,7 +78,6 @@ public class ShowtimeRepository implements IShowtimeRepository {
     @Override
     public boolean checkRoomExists(int roomId) {
         String sql = "SELECT COUNT(*) FROM CinemaRoom WHERE Id = ?";
-        // Lấy kết quả dưới dạng Integer (Count)
         Integer count = sqlJdbcTemplate.queryForObject(sql, Integer.class, roomId);
         return count != null && count > 0;
     }
@@ -99,6 +98,19 @@ public class ShowtimeRepository implements IShowtimeRepository {
         }, keyHolder);
 
         return keyHolder.getKey() != null ? keyHolder.getKey().intValue() : -1;
+    }
+
+    @Override
+    public void updateShowtime(Showtime showtime) {
+        String sql = "UPDATE Showtime SET MovieId = ?, RoomId = ?, Date = ?, Time = ?, Price = ? WHERE Id = ?";
+        sqlJdbcTemplate.update(sql, 
+            showtime.getMovieId(), 
+            showtime.getRoomId(), 
+            Date.valueOf(showtime.getDate()), 
+            Time.valueOf(showtime.getTime()), 
+            showtime.getPrice(), 
+            showtime.getId()
+        );
     }
 
     @Override

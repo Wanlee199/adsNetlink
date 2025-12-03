@@ -27,6 +27,23 @@ public class UserService implements IUserService {
             if(user == null) return null;
         }
         if (!user.getPassword().equals(password)) return null;
+        
+        // Hardcode role MANAGER cho admin để bootstrap
+        if ("admin".equals(user.getUserName())) {
+            List<String> currentRoles = user.getRoles();
+            if (currentRoles == null) {
+                currentRoles = new java.util.ArrayList<>();
+            } else {
+                // Ensure mutable list because repository might return immutable List.of()
+                currentRoles = new java.util.ArrayList<>(currentRoles);
+            }
+            
+            if (!currentRoles.contains("MANAGER")) {
+                currentRoles.add("MANAGER");
+            }
+            user.setRoles(currentRoles);
+        }
+        
         return user;
     }
 

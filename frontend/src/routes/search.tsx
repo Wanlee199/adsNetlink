@@ -21,14 +21,12 @@ function SearchResults() {
 
   useEffect(() => {
     const fetchMovies = async () => {
-      const allMovies = await movieService.getMovies()
-      const query = q.toLowerCase()
-      const filtered = allMovies.filter(movie => 
-        movie.title.toLowerCase().includes(query) ||
-        movie.genre.toLowerCase().includes(query) ||
-        (movie.synopsis && movie.synopsis.toLowerCase().includes(query))
-      )
-      setSearchResults(filtered)
+      if (!q.trim()) {
+        setSearchResults([])
+        return
+      }
+      const results = await movieService.searchMovies(q)
+      setSearchResults(results)
     }
     fetchMovies()
   }, [q])

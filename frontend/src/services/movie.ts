@@ -44,6 +44,21 @@ export const movieService = {
     }
   },
 
+  searchMovies: async (query: string): Promise<Movie[]> => {
+    try {
+      return await httpClient.get<Movie[]>('/movies/search', { params: { q: query } });
+    } catch (error) {
+      console.warn('API searchMovies failed, using mock:', error);
+      const allMovies = getLocalMovies();
+      const lowerQuery = query.toLowerCase();
+      return allMovies.filter(movie => 
+        movie.title.toLowerCase().includes(lowerQuery) ||
+        movie.genre.toLowerCase().includes(lowerQuery) ||
+        (movie.synopsis && movie.synopsis.toLowerCase().includes(lowerQuery))
+      );
+    }
+  },
+
   getMovieById: async (id: number): Promise<Movie | undefined> => {
     try {
       return await httpClient.get<Movie>(`/movies/${id}`);

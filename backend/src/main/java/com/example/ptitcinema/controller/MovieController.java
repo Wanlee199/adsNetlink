@@ -31,6 +31,13 @@ public class MovieController {
         return ResponseEntity.ok(movies);
     }
 
+    @Operation(summary = "Search Movies", description = "Searches for movies by title.")
+    @GetMapping("/search")
+    public ResponseEntity<List<MovieListItemDto>> searchMovies(@RequestParam String q) {
+        List<MovieListItemDto> movies = movieService.searchMovies(q);
+        return ResponseEntity.ok(movies);
+    }
+
     @Operation(summary = "Get Movie Details", description = "Retrieves detailed information about a specific movie.")
     @GetMapping("/{id}")
     public ResponseEntity<MovieDetailDto> getMovieDetail(@PathVariable int id) {
