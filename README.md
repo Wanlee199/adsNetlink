@@ -78,7 +78,7 @@ npm run dev
 pnpm dev
 ```
 
-Frontend sẽ chạy tại: `http://localhost:5173`
+Frontend sẽ chạy tại: `http://localhost:3000`
 
 ---
 
