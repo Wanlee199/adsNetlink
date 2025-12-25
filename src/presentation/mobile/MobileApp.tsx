@@ -814,8 +814,11 @@ export const MobileApp: React.FC = () => {
             </div>
 
             <button
+              data-sitekey="6LdWtTYsAAAAAEMJf2p1e3M6vnYebhUW00fkwthu"
+              data-callback='onSubmit'
+              data-action='submit'
               type="submit"
-              className={`submit-button ${isFormValid ? 'enabled' : ''}`}
+              className={`submit-button g-recaptcha ${isFormValid ? 'enabled' : ''}`}
               disabled={!isFormValid || isSubmitting}
             >
               {isSubmitting ? 'ĐANG GỬI...' : 'ĐĂNG KÝ NGAY'}
