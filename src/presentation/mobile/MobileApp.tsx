@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import './styles/mobile.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
-import funcWindow from '../../components/sendContact';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 const { executeRecaptcha } = useGoogleReCaptcha();
 if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
