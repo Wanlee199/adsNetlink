@@ -239,8 +239,10 @@ export const MobileApp: React.FC = () => {
     setSubmitError('');
 
     try {
+      if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
+      const token = await executeRecaptcha('submit');
       const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-      let recaptchaToken = '';
+      let recaptchaToken = token;
       if (!siteKey) {
         throw new Error('reCAPTCHA site key not configured');
       }
