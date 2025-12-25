@@ -235,7 +235,7 @@ export const MobileApp: React.FC = () => {
     setSubmitError('');
 
     try {
-      const siteKey = import.meta.env.RECAPTCHA_SITE_KEY;
+      const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
       let recaptchaToken = '';
       if (!siteKey) {
         throw new Error('reCAPTCHA site key not configured');

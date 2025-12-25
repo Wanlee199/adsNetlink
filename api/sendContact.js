@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'missing_recaptcha' });
     }
 
-    const recaptchaSecret = process.env.RECAPTCHA_SECRET;
+    const recaptchaSecret = process.env.VITE_RECAPTCHA_SECRET;
     if (!recaptchaSecret) {
       console.error('RECAPTCHA_SECRET not set');
       return res.status(500).json({ error: 'recaptcha_secret_missing' });
@@ -43,14 +43,14 @@ module.exports = async (req, res) => {
       port: 465,
       secure: true,
       auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+        user: process.env.VITE_GMAIL_USER,
+        pass: process.env.VITE_GMAIL_PASS
       }
     });
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
-      to: process.env.RECEIVER_EMAIL || process.env.GMAIL_USER,
+      from: process.env.VITE_GMAIL_USER,
+      to: process.env.VITE_RECEIVER_EMAIL || process.env.VITE_GMAIL_USER,
       subject: `Đăng ký từ ${name || 'Khách'}`,
       text: `Tên: ${name || ''}\nPhone: ${phone || ''}\nNgành: ${categories || ''}`
     };
