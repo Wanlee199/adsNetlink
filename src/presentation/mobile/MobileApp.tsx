@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser';
 import './styles/mobile.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
@@ -184,26 +184,26 @@ export const MobileApp: React.FC = () => {
       console.log('Form submitted successfully');
 
       // EmailJS configuration - Replace these with your actual EmailJS credentials
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+      // const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+      // const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+      // const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
 
-      // Prepare template parameters for EmailJS
-      const templateParams = {
-        from_name: formData.name,
-        from_phone: formData.phone,
-        industries: formData.industries.join(', ') || 'Không chọn',
-        // to_email: 'contact@netlinkad.com', // Your receiving email
-        to_email: 'tra.nguyen@netlinkad.com'
-      };
+      // // Prepare template parameters for EmailJS
+      // const templateParams = {
+      //   from_name: formData.name,
+      //   from_phone: formData.phone,
+      //   industries: formData.industries.join(', ') || 'Không chọn',
+      //   // to_email: 'contact@netlinkad.com', // Your receiving email
+      //   to_email: 'tra.nguyen@netlinkad.com'
+      // };
 
-      // Send email using EmailJS
-      await emailjs.send(
-        serviceId,
-        templateId,
-        templateParams,
-        publicKey
-      );
+      // // Send email using EmailJS
+      // await emailjs.send(
+      //   serviceId,
+      //   templateId,
+      //   templateParams,
+      //   publicKey
+      // );
 
       // Reset form after successful submission
       setFormData({
