@@ -250,7 +250,7 @@ export const DesktopApp: React.FC = () => {
       setFormData({ name: '', phone: '', industries: [] });
       navigate('/thank-you');
     } catch (err: any) {
-      console.error('Form submission error:', err);
+      // console.error('Form submission error:', err);
       setSubmitError(err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
       setTimeout(() => setSubmitError(''), 5000);
     } finally {
