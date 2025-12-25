@@ -6,8 +6,10 @@ import { DesktopFloatingCTA } from './components/DesktopFloatingCTA';
 import './styles/desktop.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
-import funcWindow from '../../components/sendContact';
-
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+const { executeRecaptcha } = useGoogleReCaptcha();
+if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
+const token = await executeRecaptcha('submit');
 /**
  * Desktop Application Component
  * 
@@ -223,7 +225,7 @@ export const DesktopApp: React.FC = () => {
         });
       }
 
-      recaptchaToken = await funcWindow();
+      recaptchaToken = token;
 
       const payload = {
         name: formData.name,
