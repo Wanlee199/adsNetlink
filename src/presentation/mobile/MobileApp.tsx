@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './styles/mobile.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
-
+import funcWindow from '../../components/sendContact';
 /**
  * Mobile Application Component
  *
@@ -254,7 +254,7 @@ export const MobileApp: React.FC = () => {
         });
       }
 
-      recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'submit' });
+      recaptchaToken = await funcWindow();
 
       const payload = {
         name: formData.name,

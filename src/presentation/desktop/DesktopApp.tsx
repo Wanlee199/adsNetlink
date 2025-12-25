@@ -6,6 +6,7 @@ import { DesktopFloatingCTA } from './components/DesktopFloatingCTA';
 import './styles/desktop.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
+import funcWindow from '../../components/sendContact';
 
 /**
  * Desktop Application Component
@@ -221,7 +222,7 @@ export const DesktopApp: React.FC = () => {
         });
       }
 
-      recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'submit' });
+      recaptchaToken = await funcWindow();
 
       const payload = {
         name: formData.name,
