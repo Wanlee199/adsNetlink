@@ -147,47 +147,108 @@ export const DesktopApp: React.FC = () => {
     }));
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+  //   setSubmitError('');
+
+  //   try {
+  //     const data = {
+  //       name: formData.name,
+  //       phone: formData.phone,
+  //       categories: formData.industries.join(', ') || 'Không chọn'
+  //     };
+
+  //     await fetch('https://script.google.com/macros/s/AKfycbzyNE47n0w-6gh5s3wExk16JIG4qb8VpEylNul-HcJxXgxuynqsNUqDiO61Z2v_Bp5A/exec', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+  //       body: JSON.stringify(data)
+  //     });
+
+  //     const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+  //     const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+  //     const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
+
+  //     if (serviceId && templateId && publicKey) {
+  //       await emailjs.send(
+  //         serviceId,
+  //         templateId,
+  //         {
+  //           from_name: formData.name,
+  //           from_phone: formData.phone,
+  //           industries: formData.industries.join(', ') || 'Không chọn',
+  //           to_email: 'tra.nguyen@netlinkad.com'
+  //         },
+  //         publicKey
+  //       );
+  //     }
+
+  //     setFormData({ name: '', phone: '', industries: [] });
+  //     navigate('/thank-you');
+  //   } catch (error) {
+  //     console.error('Form submission error:', error);
+  //     setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+  //     setTimeout(() => setSubmitError(''), 5000);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Reset states
     setIsSubmitting(true);
     setSubmitError('');
 
     try {
-      const data = {
-        name: formData.name,
-        phone: formData.phone,
-        categories: formData.industries.join(', ') || 'Không chọn'
-      };
-
-      await fetch('https://script.google.com/macros/s/AKfycbzyNE47n0w-6gh5s3wExk16JIG4qb8VpEylNul-HcJxXgxuynqsNUqDiO61Z2v_Bp5A/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
-      });
-
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
-
-      if (serviceId && templateId && publicKey) {
-        await emailjs.send(
-          serviceId,
-          templateId,
-          {
-            from_name: formData.name,
-            from_phone: formData.phone,
-            industries: formData.industries.join(', ') || 'Không chọn',
-            to_email: 'tra.nguyen@netlinkad.com'
-          },
-          publicKey
-        );
+      const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
+      let recaptchaToken = '';
+      if (!siteKey) {
+        throw new Error('reCAPTCHA site key not configured');
       }
 
+      // Load reCAPTCHA script if not present
+      if (!(window as any).grecaptcha) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = `https://www.google.com/recaptcha/api.js?render=${siteKey}`;
+          script.async = true;
+          script.defer = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error('Failed to load reCAPTCHA'));
+          document.head.appendChild(script);
+        });
+      }
+
+      recaptchaToken = await (window as any).grecaptcha.execute(siteKey, { action: 'submit' });
+
+      const payload = {
+        name: formData.name,
+        phone: formData.phone,
+        categories: formData.industries.join(', ') || 'Không chọn',
+        recaptchaToken
+      };
+
+      const resp = await fetch('/api/sendContact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const json = await resp.json();
+
+      if (!resp.ok) {
+        const msg = json?.error || json?.message || 'Lỗi khi gửi form';
+        throw new Error(msg);
+      }
+
+      // success: reset form and navigate
       setFormData({ name: '', phone: '', industries: [] });
       navigate('/thank-you');
-    } catch (error) {
-      console.error('Form submission error:', error);
-      setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+    } catch (err: any) {
+      console.error('Form submission error:', err);
+      setSubmitError(err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
       setTimeout(() => setSubmitError(''), 5000);
     } finally {
       setIsSubmitting(false);
