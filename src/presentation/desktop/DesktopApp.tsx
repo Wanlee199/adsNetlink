@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser';
 import { DesktopHeader } from './components/DesktopHeader';
 import { DesktopFloatingCTA } from './components/DesktopFloatingCTA';
 import './styles/desktop.css';
