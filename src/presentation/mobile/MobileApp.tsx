@@ -7,7 +7,6 @@ import faqData from '../../assets/jsons/question_and_answer.json';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 const { executeRecaptcha } = useGoogleReCaptcha();
 if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
-const token = await executeRecaptcha('submit');
 /**
  * Mobile Application Component
  *
