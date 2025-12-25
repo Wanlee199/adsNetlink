@@ -1,0 +1,24 @@
+# Mobile Images - Required Assets
+
+Place your mobile-specific images here with the following names:
+
+## Required Images:
+1. logo.png - Header navigation logo (recommended: 200x60px)
+2. ic_logo.png - Hero section main logo (recommended: 280x60px) - **IMPORTANT**
+3. hero-screen-1.png - First hero section dashboard screenshot (recommended: 300x400px)
+4. hero-screen-2.png - Second hero section analytics screenshot (recommended: 300x400px)
+5. partner-1.png - First partner logo (recommended: 150x80px)
+6. partner-2.png - Second partner logo (recommended: 150x80px)
+7. partner-3.png - Third partner logo (recommended: 150x80px)
+8. avatar.png - Customer testimonial avatar (recommended: 100x100px, circular)
+
+## File Formats:
+- Logo: PNG with transparent background
+- Screenshots: PNG or JPG
+- Partner logos: PNG with transparent background preferred
+- Avatar: PNG or JPG, will be displayed as circle
+
+## Tips:
+- Use high-quality images (2x resolution for retina displays)
+- Optimize images before uploading (use TinyPNG or similar)
+- Keep file sizes reasonable (under 500KB per image)

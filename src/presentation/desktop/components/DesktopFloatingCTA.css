@@ -1,0 +1,29 @@
+/* Floating CTA Buttons */
+.desktop-floating-cta {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    z-index: 1000;
+}
+
+.desktop-floating-cta a {
+    display: block;
+    line-height: 0;
+}
+
+.desktop-cta-icon {
+    width: 60px;
+    height: 60px;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.3s ease, filter 0.3s ease;
+    filter: drop-shadow(0 4px 15px rgba(0, 255, 0, 0.3));
+}
+
+.desktop-cta-icon:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 6px 20px rgba(0, 255, 0, 0.5));
+}

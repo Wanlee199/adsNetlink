@@ -1,0 +1,50 @@
+[
+  {
+    "asset": "/images/reviews/ic_ava_review_1.png",
+    "name": "Chị Vy",
+    "company": "(Luxstay)",
+    "location": "Tp. Hồ Chí Minh",
+    "testimonial": "Team mình thuê tài khoản qua Netlink hơn 6 tháng nay, cực kỳ ổn định. Lên camp mượt, không lỗi thanh toán, mà có cả checklist warm-up rõ ràng. Mọi thứ minh bạch, quan trọng nhất là đội ngũ cực kỳ có trách nhiệm & luôn hỗ trợ sát sao.",
+    "rating": 5
+  },
+  {
+    "asset": "/images/reviews/ic_ava_review_2.png",
+    "name": "Chị Hằng",
+    "company": "(Face Wash Fox)",
+    "location": "Tp. Hồ Chí Minh",
+    "testimonial": "Netlink đã giúp chúng tôi không chỉ tối ưu hiệu quả quảng cáo mà còn vận hành cực nhanh và ổn định. Tài khoản khỏe, hạn mức cao nên chiến dịch luôn đạt hiệu suất vượt mong đợi. Đội ngũ support chuyên nghiệp và đồng hành sát sao. Rất đáng tin cậy!",
+    "rating": 5
+  },
+  {
+    "asset": "/images/reviews/ic_ava_review_3.png",
+    "name": "Chị Dung",
+    "company": "(Elravie)",
+    "location": "Hà Nội",
+    "testimonial": "Làm việc với Netlink là một trong những quyết định chiến lược đúng đắn nhất của Elravie. Team không chỉ am hiểu thị trường, nắm bắt xu hướng nhanh mà còn luôn chủ động đề xuất hướng chạy hiệu quả, phù hợp với từng giai đoạn.",
+    "rating": 5
+  },
+  {
+    "asset": "/images/reviews/ic_ava_review_4.png",
+    "name": "Anh Vũ",
+    "company": "(Coincu)",
+    "location": "Tp. Hồ Chí Minh",
+    "testimonial": "Từng gặp nhiều vấn đề với các tài khoản trước đây, nhưng từ khi dùng MCC của Netlink thì gần như không còn lỗi hay khoá nữa. Chạy ads qua tài khoản Netlink mượt và ổn định hơn hẳn. Quy trình xử lý sự cố cực nhanh, đội support cũng cực kỳ nhiệt tình và hiểu việc.",
+    "rating": 5
+  },
+  {
+    "asset": "/images/reviews/ic_ava_review_5.png",
+    "name": "Chị Tú Anh",
+    "company": "(M.AI Center)",
+    "location": "Tp. Hồ Chí Minh",
+    "testimonial": "Điều mình thích nhất ở Netlink là tốc độ & sự chuyên nghiệp. Setup nhanh, phân phối ổn định, billing rõ ràng. Giờ chỉ cần tập trung vào chạy ads, mọi thứ còn lại team Netlink lo hết.",
+    "rating": 5
+  },
+  {
+    "asset": "/images/reviews/ic_ava_review_6.png",
+    "name": "Anh Giang",
+    "company": "(CB Group)",
+    "location": "Hà Nội",
+    "testimonial": "Thuê tài khoản qua Netlink vừa nhanh vừa an toàn. Setup chỉ vài phút là xong, có đối soát rõ ràng và quy trình cực chuyên nghiệp. Không cần lo xác minh hay billing phức tạp nữa, tiết kiệm rất nhiều thời gian cho team.",
+    "rating": 4
+  }
+]
