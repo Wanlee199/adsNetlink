@@ -195,6 +195,7 @@ export const DesktopApp: React.FC = () => {
   //   }
   // };
 
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -204,7 +205,6 @@ export const DesktopApp: React.FC = () => {
     setSubmitError('');
 
     try {
-      const { executeRecaptcha } = useGoogleReCaptcha();
       if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
       const token = await executeRecaptcha('submit');
       const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
@@ -251,7 +251,7 @@ export const DesktopApp: React.FC = () => {
       navigate('/thank-you');
     } catch (err: any) {
       // console.error('Form submission error:', err);
-      setSubmitError(err?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
+      setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
       setTimeout(() => setSubmitError(''), 5000);
     } finally {
       setIsSubmitting(false);
