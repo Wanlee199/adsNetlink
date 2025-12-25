@@ -768,7 +768,7 @@ export const MobileApp: React.FC = () => {
             NHẬN THÔNG TIN
           </h2>
 
-          <form className="registration-form" onSubmit={handleSubmit}>
+          <form id="contact-form" className="registration-form" onSubmit={handleSubmit}>
             <div className="form-input-wrapper" data-placeholder="Họ và tên">
               <input
                 type="text"

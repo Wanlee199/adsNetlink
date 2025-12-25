@@ -195,6 +195,7 @@ export const DesktopApp: React.FC = () => {
   //   }
   // };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -526,7 +527,7 @@ export const DesktopApp: React.FC = () => {
             </div>
 
             {/* Right: Form */}
-            <form className="desktop-registration-form" onSubmit={handleSubmit}>
+            <form id="contact-form" className="desktop-registration-form" onSubmit={handleSubmit}>
               <div className="desktop-form-input-wrapper" data-placeholder="Họ và tên">
                 <input
                   type="text"
