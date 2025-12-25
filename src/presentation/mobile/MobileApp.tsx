@@ -5,8 +5,6 @@ import './styles/mobile.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-const { executeRecaptcha } = useGoogleReCaptcha();
-if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
 /**
  * Mobile Application Component
  *
@@ -237,6 +235,7 @@ export const MobileApp: React.FC = () => {
     setSubmitError('');
 
     try {
+      const { executeRecaptcha } = useGoogleReCaptcha();
       if (!executeRecaptcha) throw new Error('reCAPTCHA not ready');
       const token = await executeRecaptcha('submit');
       const siteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
