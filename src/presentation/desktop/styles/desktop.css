@@ -140,7 +140,7 @@
  */
 .desktop-hero-wrapper {
   display: grid;
-  grid-template-columns: 28.75vw 1fr;
+  grid-template-columns: 32vw 1fr;
   /* 25vw increased by 15% = 28.75vw */
   gap: 2rem;
   align-items: center;
