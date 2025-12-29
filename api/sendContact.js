@@ -1,4 +1,5 @@
 ﻿import nodemailer from 'nodemailer';
+import { google } from 'googleapis';
 
 export default async function (req, res) {
   if (req.method !== 'POST') {
@@ -15,16 +16,46 @@ export default async function (req, res) {
     }
 
     const recaptchaSecret = process.env.RECAPTCHA_SECRET;
-    console.log('envs:', {
-      recaptchaSecret: !!recaptchaSecret,
-      gmailUser: !!process.env.GMAIL_USER,
-      receiver: !!process.env.RECEIVER_EMAIL,
-    });
 
     if (!recaptchaSecret) {
       console.error('RECAPTCHA_SECRET not set');
       return res.status(500).json({ error: 'recaptcha_secret_missing' });
     }
+
+    // --- Google Sheets: append submission row (timestamp, name, phone, categories) ---
+    const sheetId = process.env.GOOGLE_SHEET_ID;
+    const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
+    const clientEmail = process.env.GSA_CLIENT_EMAIL;
+    const privateKey = process.env.GSA_PRIVATE_KEY;
+
+    if (sheetId && clientEmail && privateKey) {
+      try {
+        const jwtClient = new google.auth.JWT(
+          clientEmail,
+          undefined,
+          privateKey.replace(/\\n/g, '\n'),
+          ['https://www.googleapis.com/auth/spreadsheets']
+        );
+        await jwtClient.authorize();
+
+        const sheets = google.sheets({ version: 'v4', auth: jwtClient });
+        await sheets.spreadsheets.values.append({
+          spreadsheetId: sheetId,
+          range: sheetRange,
+          valueInputOption: 'RAW',
+          requestBody: {
+            values: [[new Date().toISOString(), name || '', phone || '', categories || '']]
+          }
+        });
+        console.log('Appended row to Google Sheet');
+      } catch (sheetErr) {
+        console.error('Google Sheets append failed:', sheetErr);
+        // do not block email/send response; continue
+      }
+    } else {
+      console.log('Google Sheets env vars not set, skipping append');
+    }
+    // --- end Google Sheets logic ---
 
     // ensure fetch available (Node 18+ has global fetch)
     let nodeFetch = globalThis.fetch;
