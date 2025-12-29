@@ -37,6 +37,7 @@ export default async function (req, res) {
     const privateKey = process.env.GSA_PRIVATE_KEY;
 
     if (sheetId && clientEmail && privateKey) {
+      console.log('chạy vào đây');
       try {
         const jwtClient = new google.auth.JWT(
           clientEmail,
