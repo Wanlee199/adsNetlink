@@ -45,8 +45,15 @@ export default async function (req, res) {
           ['https://www.googleapis.com/auth/spreadsheets']
         );
         await jwtClient.authorize();
-
+        console.log('✅ AUTHORIZE OK');
         const sheets = google.sheets({ version: 'v4', auth: jwtClient });
+        console.log('CLIENT EMAIL:', process.env.GSA_CLIENT_EMAIL);
+        console.log(
+          'PRIVATE KEY OK:',
+          privateKey.startsWith('-----BEGIN PRIVATE KEY-----'),
+          privateKey.endsWith('-----END PRIVATE KEY-----')
+        );
+        console.log('PRIVATE KEY LENGTH:', privateKey.length);
         await sheets.spreadsheets.values.append({
           spreadsheetId: sheetId,
           range: sheetRange,
@@ -58,6 +65,7 @@ export default async function (req, res) {
         console.log('Appended row to Google Sheet');
       } catch (sheetErr) {
         console.error('Google Sheets append failed:', sheetErr);
+        console.error(sheetErr?.response?.data || sheetErr);
         // do not block email/send response; continue
       }
     } else {
