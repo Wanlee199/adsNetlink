@@ -35,7 +35,9 @@ export default async function (req, res) {
     const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
     const clientEmail = process.env.GSA_CLIENT_EMAIL;
     const privateKey = process.env.GSA_PRIVATE_KEY;
-
+    console.log('sheetID:', sheetId);
+    console.log('clientEmail:', clientEmail);
+    console.log('privateKey set:', privateKey);
     if (sheetId && clientEmail && privateKey) {
       console.log('chạy vào đây');
       try {
