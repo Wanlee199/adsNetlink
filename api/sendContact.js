@@ -22,6 +22,14 @@ export default async function (req, res) {
       return res.status(500).json({ error: 'recaptcha_secret_missing' });
     }
 
+    
+    // ensure fetch available (Node 18+ has global fetch)
+    let nodeFetch = globalThis.fetch;
+    if (typeof nodeFetch !== 'function') {
+      const mod = await import('node-fetch');
+      nodeFetch = mod.default;
+    }
+
     // --- Google Sheets: append submission row (timestamp, name, phone, categories) ---
     const sheetId = process.env.GOOGLE_SHEET_ID;
     const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
@@ -57,12 +65,6 @@ export default async function (req, res) {
     }
     // --- end Google Sheets logic ---
 
-    // ensure fetch available (Node 18+ has global fetch)
-    let nodeFetch = globalThis.fetch;
-    if (typeof nodeFetch !== 'function') {
-      const mod = await import('node-fetch');
-      nodeFetch = mod.default;
-    }
 
     const verifyResp = await nodeFetch(
       `https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(recaptchaSecret)}&response=${encodeURIComponent(recaptchaToken)}`,
