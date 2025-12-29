@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // import emailjs from '@emailjs/browser';
 import { DesktopHeader } from './components/DesktopHeader';
 import { DesktopFloatingCTA } from './components/DesktopFloatingCTA';
@@ -17,7 +17,7 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
  * - Content: Grid-based adaptation of Mobile content
  */
 export const DesktopApp: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   // Helper function to render text with green uppercase words
   const renderTextWithGreenCaps = (text: string) => {
@@ -248,7 +248,7 @@ export const DesktopApp: React.FC = () => {
 
       // success: reset form and navigate
       setFormData({ name: '', phone: '', industries: [] });
-      navigate('/thank-you');
+      // navigate('/thank-you');
     } catch (err: any) {
       console.error('Form submission error:', err);
       setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
