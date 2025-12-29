@@ -34,17 +34,19 @@ export default async function (req, res) {
     const sheetId = process.env.GOOGLE_SHEET_ID;
     const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
     const clientEmail = process.env.GSA_CLIENT_EMAIL;
-    const privateKey = process.env.GSA_PRIVATE_KEY;
-    console.log('sheetID:', sheetId);
-    console.log('clientEmail:', clientEmail);
-    console.log('privateKey set:', privateKey);
-    if (sheetId && clientEmail && privateKey) {
-      console.log('chạy vào đây');
+    const rawKey = process.env.GSA_PRIVATE_KEY;
+    if (!rawKey) throw new Error('GSA_PRIVATE_KEY is missing');
+
+    if (sheetId && clientEmail && rawKey) {
+      const formattedKey = rawKey
+      .replace(/\\n/g, '\n')
+      .replace(/"/g, '') 
+      .trim();
       try {
         const jwtClient = new google.auth.JWT(
           clientEmail,
           undefined,
-          privateKey.replace(/\\n/g, '\n'),
+          formattedKey,
           ['https://www.googleapis.com/auth/spreadsheets']
         );
         await jwtClient.authorize();
