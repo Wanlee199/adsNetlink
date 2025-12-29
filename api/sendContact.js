@@ -46,7 +46,7 @@ export default async function (req, res) {
         const jwtClient = new google.auth.JWT(
           clientEmail,
           undefined,
-          formattedKey,
+          rawKey,
           ['https://www.googleapis.com/auth/spreadsheets']
         );
         await jwtClient.authorize();
