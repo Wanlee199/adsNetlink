@@ -34,7 +34,7 @@ export default async function (req, res) {
     const sheetId = process.env.GOOGLE_SHEET_ID;
     const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
     const clientEmail = process.env.GSA_CLIENT_EMAIL;
-    const rawKey = process.env.GSA_PRIVATE_KEY;
+    const rawKey = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC6g5s9stETEkI8\nH6BUzHNHIqVdukbjWeSwb2i0x5j4NTyxVc6SST7o3PvA2+TRST7w3/trTp3uCuIG\nOgMJ9iqvS5/kZy7gzOv6E9bQHtVF/xLOTNnSPAzm8DUp3fV7SgEOEkksZZCmUbQL\n59NgYet0zaNbvbc5IPIAY5M5ymQQDdUA4dGkOmp4e1iZVT55dS8OdjzCffFh+KMS\nG+XA+YdWlBGY1uFFV7jMSE1tEf5YzymBqJZSrxosaYXyMmZTSkOPJOrkw9Uo+vvY\n8tRR0uKOyOaX5x317gZ/ZJiT+7sXjZ1E12wD+vYV2rUCm8QL/G94OSt9Deh5ig8a\nI7GQgRBxAgMBAAECggEADeFOaRczdPe2YygNXqd/wAr62HtM3Dgr4ITMpit2cv5E\nlS6Sur3lscmu7el6C/3R8nYQt/8imfzzA3icvPM2C6k/7cJPXEkTxJ67rUL7fIPg\n1TvQjVM3uJX8DDC+8d0OMAsPU/+o9fT9m6c1yqXu3QM9Ws3xt+LU76TOvOMWyD+b\nuHRLT/6m1KC9Kuuckc1dNcma4yfNyCWNXAgF0EMGG40RjFstd1NwG8YNaeYnZKIS\nRYDC4ZuHD5CX5Irp0XT8E3bMBp3uTJOXfA9uPoG0/046ryhgcqMz5o/PupfT2Auo\nDYxbPw9qzvWLSB70GR8nKLCe7hhhOSTDrOVP4EByuwKBgQD9mvpJRIXs3fUIqmip\n0ORd0wjTN8UCjfY6jUvr51A76jMmu87YfF2H/Afgfv2oKA/OibgI4qrUmOFRkLmg\nSTCkgH3goYxgDpKwh92NgdSYpi39/mPALUrnHyWDglTfxCPZIuEpEXwfezzj4QAP\n+/ssTZApKXxPAJy3/uNuPs3PXwKBgQC8RnQllQuExXCeWl09vYnqD3omOByEfK8x\n0gNc0l10Q9a1F4Thk0JktuiFoznTOQrtf25J1Ej/eMNYUfZqHGTu6fgRIC6ihg9x\nm8wvvyNUHf4WiK2mW8Qec8dkGM4NXR1se2Hv3pfmcd26TGarMlQg6HKP+/cLg2h9\nd8XuQa7CLwKBgQCw0uEWOufiOvRBoYeud87yuFUb6HO+DzuSobhA+JyR2f7mT+au\nPTB9wzW+yuyT1bMHwDCISXrxFtNrqqwy3TVETa7288zLoP2YhnLs2oxgDuZchYYJ\nlcr3EVl3s2T4TGruWAqENwPDc4sGHHiNrJT50+7jNGDPOM8M33S2BqY7owKBgCvb\n8cSrguJsKD8LZ/sxA0a+UkNDAQmwDhP6C4R9EP47q3HGR9NQvb++iE5RZvAYsr3+\n2I9kX5j75e3WMiQn9y9c28gJijOcLU7W72sUCMPYtM9FCcbeS8KYUBO2X5HnZipW\nV8tMPHCXiAKVN7mb4NNFsyJtnPBWrWnFFBvbuz1LAoGAY2A+/yHYCd0gz9NxgEE1\nOs3jhcnrzpzt5NQ5Zpn9vSuoazXxZA6cjl04ViwalUiSsG+wVUr7hxod0rmt+8oU\njaQTzjS7xv4pNMRYdeSEJbsC1+Oxeek3xjBIgCke4DbcJp0IraACpgjSpnQZpDYt\nUAyHpXUSBS+jeQ2dCK8YbiI=\n-----END PRIVATE KEY-----\n";
     if (!rawKey) throw new Error('GSA_PRIVATE_KEY is missing');
 
     if (sheetId && clientEmail && rawKey) {
@@ -46,7 +46,7 @@ export default async function (req, res) {
         const jwtClient = new google.auth.JWT(
           clientEmail,
           undefined,
-          rawKey,
+          formattedKey,
           ['https://www.googleapis.com/auth/spreadsheets']
         );
         await jwtClient.authorize();
