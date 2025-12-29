@@ -32,7 +32,7 @@ export default async function (req, res) {
 
     // --- Google Sheets: append submission row (timestamp, name, phone, categories) ---
     const sheetId = process.env.GOOGLE_SHEET_ID;
-    const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'Sheet1!A:D';
+    const sheetRange = process.env.GOOGLE_SHEET_RANGE || 'LDP - Leadform!A:D';
     const clientEmail = process.env.GSA_CLIENT_EMAIL;
     const privateKey = process.env.GSA_PRIVATE_KEY;
 
