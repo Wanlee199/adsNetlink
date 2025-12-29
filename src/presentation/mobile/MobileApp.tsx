@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // import emailjs from '@emailjs/browser';
 import './styles/mobile.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
@@ -11,7 +11,7 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
  * Based on the marketing solutions website design with dark theme and green accents
  */
 export const MobileApp: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // Helper function to render text with green uppercase words
   const renderTextWithGreenCaps = (text: string) => {
@@ -281,7 +281,7 @@ export const MobileApp: React.FC = () => {
 
       // success: reset form and navigate
       setFormData({ name: '', phone: '', industries: [] });
-      // navigate('/thank-you');
+      navigate('/thank-you');
     } catch (err: any) {
       console.error('Form submission error:', err);
       setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
