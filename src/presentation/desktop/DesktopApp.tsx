@@ -248,7 +248,7 @@ export const DesktopApp: React.FC = () => {
 
       // success: reset form and navigate
       setFormData({ name: '', phone: '', industries: [] });
-      // navigate('/thank-you');
+      navigate('/thank-you');
     } catch (err: any) {
       console.error('Form submission error:', err);
       setSubmitError('Đã có lỗi xảy ra. Vui lòng thử lại sau.');
