@@ -61,6 +61,7 @@ export const useDeviceDetection = (breakpoint: number = 768) => {
     isDesktop,
     deviceType: (isMobile ? 'mobile' : 'desktop') as 'mobile' | 'desktop',
   };
+  
   // // Check User-Agent on initial load to determine if desktop browser
   // const [isDesktopDevice] = useState<boolean>(() => isDesktopBrowser());
   // // const [windowWidth, setWindowWidth] = useState<number>(0);
