@@ -5,7 +5,7 @@ import { DeviceProvider } from './presentation/shared/contexts/DeviceContext';
 import { ResponsiveLayout } from './presentation/shared/components/ResponsiveLayout';
 import { ResponsiveSuccessPage } from './presentation/shared/components/ResponsiveSuccessPage';
 // import { DesktopApp } from './presentation/desktop/DesktopApp';
-import React, { Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 
 /**
  * Main Application Component
