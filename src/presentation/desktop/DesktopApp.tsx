@@ -7,7 +7,6 @@ import './styles/desktop.css';
 import customerReviews from '../../assets/jsons/customer_review.json';
 import faqData from '../../assets/jsons/question_and_answer.json';
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
 
 /**
  * Desktop Application Component
@@ -307,402 +306,400 @@ export const DesktopApp: React.FC = () => {
   };
 
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
-      <div className="desktop-container">
-        <DesktopHeader
-          onLogoClick={() => scrollToSection(heroRef)}
-          onNavClick={handleNavClick}
-          onRegisterClick={() => scrollToSection(registrationFormRef)}
-        />
+    <div className="desktop-container">
+      <DesktopHeader
+        onLogoClick={() => scrollToSection(heroRef)}
+        onNavClick={handleNavClick}
+        onRegisterClick={() => scrollToSection(registrationFormRef)}
+      />
 
-        <main className="desktop-main">
-          {/* Hero Section with Banner */}
-          <section className="desktop-hero-wrapper" ref={heroRef} id="home">
-            {/* Left Column: Banner */}
-            <div className="desktop-hero-banner">
-              <div className="desktop-banner-container">
-                <div
-                  className="desktop-banner-track"
-                  style={{ transform: `translateX(-${currentBanner * 100}%)` }}
-                >
-                  {banners.map((banner, index) => (
-                    <div key={index} className="desktop-banner-slide">
-                      <img src={banner} alt={`Banner ${index + 1}`} className="desktop-banner-image" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Text & CTA */}
-            <div className="desktop-hero-content">
-              <div className="desktop-hero-title">
-                <span className="title-line-1-desktop">PERFORMANCE</span>
-                <span className="title-line-1-desktop">MARKETING SOLUTIONS</span>
-                <p className="hero-subtitle-text-desktop">Netlink Global - Invoice UK/VN</p>
-              </div>
-              <button className="header-cta-button hero-cta-button-desktop" onClick={() => scrollToSection(registrationFormRef)}>NHẬN TƯ VẤN</button>
-            </div>
-          </section>
-
-          {/* Stats */}
-          <section className="desktop-consultation">
-            <div className="desktop-stats-grid">
-              <div className="desktop-stat-item">
-                <img src="/icons/ic_human_resource.svg" alt="Nhân sự" className="desktop-stat-icon" />
-                <div className="desktop-stat-number">+30</div>
-                <div className="desktop-stat-label">Nhân sự<br />kinh nghiệm</div>
-              </div>
-              <div className="desktop-stat-item">
-                <img src="/icons/ic_collaboration.svg" alt="Khách hàng" className="desktop-stat-icon" />
-                <div className="desktop-stat-number">+350</div>
-                <div className="desktop-stat-label">Khách hàng<br />hợp tác</div>
-              </div>
-              <div className="desktop-stat-item">
-                <img src="/icons/ic_success.svg" alt="Dự án" className="desktop-stat-icon" />
-                <div className="desktop-stat-number">+500</div>
-                <div className="desktop-stat-label">Dự án<br />thành công</div>
-              </div>
-              <div className="desktop-stat-item">
-                <img src="/icons/ic_satisfy.svg" alt="Hài lòng" className="desktop-stat-icon" />
-                <div className="desktop-stat-number">90%</div>
-                <div className="desktop-stat-label">Khách hàng<br />hài lòng</div>
-              </div>
-            </div>
-          </section>
-
-          {/* Solutions Section */}
-          <section className="desktop-solutions" ref={solutionRef} id="solutions">
-            <h2 className="desktop-section-title">GIẢI PHÁP TOÀN DIỆN<br />CHO CÁC DOANH NGHIỆP</h2>
-
-            {/* Solutions Grid */}
-            <div className="desktop-solutions-grid">
-              {solutionCards.map((card, index) => (
-                <div key={index} className="desktop-solution-card">
-                  <div className="desktop-solution-icon-container">
-                    <img src={card.icon} alt={card.title} className="desktop-solution-icon" />
+      <main className="desktop-main">
+        {/* Hero Section with Banner */}
+        <section className="desktop-hero-wrapper" ref={heroRef} id="home">
+          {/* Left Column: Banner */}
+          <div className="desktop-hero-banner">
+            <div className="desktop-banner-container">
+              <div
+                className="desktop-banner-track"
+                style={{ transform: `translateX(-${currentBanner * 100}%)` }}
+              >
+                {banners.map((banner, index) => (
+                  <div key={index} className="desktop-banner-slide">
+                    <img src={banner} alt={`Banner ${index + 1}`} className="desktop-banner-image" />
                   </div>
-                  <div className="desktop-solution-card-category">{renderTextWithGreenCaps(card.category)}</div>
-                  <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
-                  <div className="desktop-solution-card-title">{renderTextWithGreenCaps(card.title)}</div>
-                  <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
-                  <div className="desktop-solution-card-subtitle">{renderTextWithGreenCaps(card.subtitle)}</div>
-                  <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
-                  <div className="desktop-solution-card-desc">{renderTextWithGreenCaps(card.desc)}</div>
-                  <button className="desktop-solution-card-button" onClick={() => scrollToSection(registrationFormRef)}>NHẬN TƯ VẤN</button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Text & CTA */}
+          <div className="desktop-hero-content">
+            <div className="desktop-hero-title">
+              <span className="title-line-1-desktop">PERFORMANCE</span>
+              <span className="title-line-1-desktop">MARKETING SOLUTIONS</span>
+              <p className="hero-subtitle-text-desktop">Netlink Global - Invoice UK/VN</p>
+            </div>
+            <button className="header-cta-button hero-cta-button-desktop" onClick={() => scrollToSection(registrationFormRef)}>NHẬN TƯ VẤN</button>
+          </div>
+        </section>
+
+        {/* Stats */}
+        <section className="desktop-consultation">
+          <div className="desktop-stats-grid">
+            <div className="desktop-stat-item">
+              <img src="/icons/ic_human_resource.svg" alt="Nhân sự" className="desktop-stat-icon" />
+              <div className="desktop-stat-number">+30</div>
+              <div className="desktop-stat-label">Nhân sự<br />kinh nghiệm</div>
+            </div>
+            <div className="desktop-stat-item">
+              <img src="/icons/ic_collaboration.svg" alt="Khách hàng" className="desktop-stat-icon" />
+              <div className="desktop-stat-number">+350</div>
+              <div className="desktop-stat-label">Khách hàng<br />hợp tác</div>
+            </div>
+            <div className="desktop-stat-item">
+              <img src="/icons/ic_success.svg" alt="Dự án" className="desktop-stat-icon" />
+              <div className="desktop-stat-number">+500</div>
+              <div className="desktop-stat-label">Dự án<br />thành công</div>
+            </div>
+            <div className="desktop-stat-item">
+              <img src="/icons/ic_satisfy.svg" alt="Hài lòng" className="desktop-stat-icon" />
+              <div className="desktop-stat-number">90%</div>
+              <div className="desktop-stat-label">Khách hàng<br />hài lòng</div>
+            </div>
+          </div>
+        </section>
+
+        {/* Solutions Section */}
+        <section className="desktop-solutions" ref={solutionRef} id="solutions">
+          <h2 className="desktop-section-title">GIẢI PHÁP TOÀN DIỆN<br />CHO CÁC DOANH NGHIỆP</h2>
+
+          {/* Solutions Grid */}
+          <div className="desktop-solutions-grid">
+            {solutionCards.map((card, index) => (
+              <div key={index} className="desktop-solution-card">
+                <div className="desktop-solution-icon-container">
+                  <img src={card.icon} alt={card.title} className="desktop-solution-icon" />
                 </div>
+                <div className="desktop-solution-card-category">{renderTextWithGreenCaps(card.category)}</div>
+                <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
+                <div className="desktop-solution-card-title">{renderTextWithGreenCaps(card.title)}</div>
+                <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
+                <div className="desktop-solution-card-subtitle">{renderTextWithGreenCaps(card.subtitle)}</div>
+                <img src="/images/mobile/img_solution_text_line.svg" alt="divider" className="desktop-solution-card-divider" />
+                <div className="desktop-solution-card-desc">{renderTextWithGreenCaps(card.desc)}</div>
+                <button className="desktop-solution-card-button" onClick={() => scrollToSection(registrationFormRef)}>NHẬN TƯ VẤN</button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Services Section */}
+        <section className="desktop-services" ref={servicesRef} id="services">
+          <h2 className="desktop-section-title">DỊCH VỤ CHÚNG TÔI CUNG CẤP</h2>
+
+          {/* Hexagons Image */}
+          <div className="desktop-hexagons-container">
+            <img
+              src="/images/desktop/img_desktop_hexegons.png"
+              alt="Services Hexagons"
+              className="desktop-hexagons-image"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onLoad={(e) => e.currentTarget.classList.add('loaded')}
+            />
+          </div>
+
+          <p className="desktop-services-footer">
+            Tài khoản whitelisted chính thức, nằm trong hệ thống đối tác uỷ quyền.
+          </p>
+        </section>
+
+        {/* Service Request Section */}
+        <section className="desktop-service-request" ref={processRef} id="process">
+          <h2 className="desktop-section-title">
+            QUY TRÌNH THUÊ TÀI KHOẢN TẠI NETLINK
+          </h2>
+
+          <div className="desktop-steps-container">
+            <img
+              src="/images/desktop/img_service_steps.png"
+              alt="Service Steps"
+              className="desktop-steps-image"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
+              onLoad={(e) => e.currentTarget.classList.add('loaded')}
+            />
+          </div>
+        </section>
+
+        {/* Partner and Customer Section */}
+        <section className="desktop-partners" ref={partnersRef} id="partners">
+          <h2 className="desktop-section-title">ĐỐI TÁC</h2>
+          <div className="desktop-logo-scroll-container">
+            <div className="desktop-logo-scroll-track">
+              {[...partnerLogos, ...partnerLogos].map((logo, index) => (
+                <img key={index} src={logo} alt={`Partner ${index + 1}`} className="desktop-logo-item" />
               ))}
             </div>
-          </section>
+          </div>
 
-          {/* Services Section */}
-          <section className="desktop-services" ref={servicesRef} id="services">
-            <h2 className="desktop-section-title">DỊCH VỤ CHÚNG TÔI CUNG CẤP</h2>
-
-            {/* Hexagons Image */}
-            <div className="desktop-hexagons-container">
-              <img
-                src="/images/desktop/img_desktop_hexegons.png"
-                alt="Services Hexagons"
-                className="desktop-hexagons-image"
-                draggable={false}
-                onContextMenu={(e) => e.preventDefault()}
-                onLoad={(e) => e.currentTarget.classList.add('loaded')}
-              />
+          <h2 className="desktop-section-title" style={{ paddingTop: '30px' }}>KHÁCH HÀNG</h2>
+          <p className="desktop-customer-description">
+            <span className="text-green">Netlink</span> luôn tự hào khi được đồng hành cùng khách hàng với vai trò là sự lựa chọn
+            hàng đầu, nhờ vào chất lượng dịch vụ vượt trội, sự tận tâm trong từng giải pháp
+            và cam kết đồng hành lâu dài.
+          </p>
+          <div className="desktop-logo-scroll-container">
+            <div className="desktop-logo-scroll-track">
+              {[...customerLogos, ...customerLogos].map((logo, index) => (
+                <img key={index} src={logo} alt={`Customer ${index + 1}`} className="desktop-logo-item" />
+              ))}
             </div>
+          </div>
+        </section>
 
-            <p className="desktop-services-footer">
-              Tài khoản whitelisted chính thức, nằm trong hệ thống đối tác uỷ quyền.
-            </p>
-          </section>
+        {/* Customer Reviews Section */}
+        <section className="desktop-customer-reviews">
+          <h2 className="desktop-section-title">KHÁCH HÀNG ĐÁNH GIÁ</h2>
 
-          {/* Service Request Section */}
-          <section className="desktop-service-request" ref={processRef} id="process">
-            <h2 className="desktop-section-title">
-              QUY TRÌNH THUÊ TÀI KHOẢN TẠI NETLINK
-            </h2>
+          <div className="desktop-reviews-carousel">
+            <button
+              className="desktop-review-nav-btn desktop-review-nav-prev"
+              onClick={() => setCurrentReview((prev) => prev - 1)}
+              aria-label="Previous review"
+            >
+              <img src="/images/desktop/img_pre_btn.png" alt="Previous" />
+            </button>
 
-            <div className="desktop-steps-container">
-              <img
-                src="/images/desktop/img_service_steps.png"
-                alt="Service Steps"
-                className="desktop-steps-image"
-                draggable={false}
-                onContextMenu={(e) => e.preventDefault()}
-                onLoad={(e) => e.currentTarget.classList.add('loaded')}
-              />
-            </div>
-          </section>
-
-          {/* Partner and Customer Section */}
-          <section className="desktop-partners" ref={partnersRef} id="partners">
-            <h2 className="desktop-section-title">ĐỐI TÁC</h2>
-            <div className="desktop-logo-scroll-container">
-              <div className="desktop-logo-scroll-track">
-                {[...partnerLogos, ...partnerLogos].map((logo, index) => (
-                  <img key={index} src={logo} alt={`Partner ${index + 1}`} className="desktop-logo-item" />
-                ))}
-              </div>
-            </div>
-
-            <h2 className="desktop-section-title" style={{ paddingTop: '30px' }}>KHÁCH HÀNG</h2>
-            <p className="desktop-customer-description">
-              <span className="text-green">Netlink</span> luôn tự hào khi được đồng hành cùng khách hàng với vai trò là sự lựa chọn
-              hàng đầu, nhờ vào chất lượng dịch vụ vượt trội, sự tận tâm trong từng giải pháp
-              và cam kết đồng hành lâu dài.
-            </p>
-            <div className="desktop-logo-scroll-container">
-              <div className="desktop-logo-scroll-track">
-                {[...customerLogos, ...customerLogos].map((logo, index) => (
-                  <img key={index} src={logo} alt={`Customer ${index + 1}`} className="desktop-logo-item" />
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Customer Reviews Section */}
-          <section className="desktop-customer-reviews">
-            <h2 className="desktop-section-title">KHÁCH HÀNG ĐÁNH GIÁ</h2>
-
-            <div className="desktop-reviews-carousel">
-              <button
-                className="desktop-review-nav-btn desktop-review-nav-prev"
-                onClick={() => setCurrentReview((prev) => prev - 1)}
-                aria-label="Previous review"
+            <div className="desktop-reviews-container">
+              <div
+                className="desktop-reviews-track"
+                style={{
+                  transform: `translateX(calc(-${reviewOffset + currentReview} * (((56vw - 60px) / 4) + 20px)))`
+                }}
               >
-                <img src="/images/desktop/img_pre_btn.png" alt="Previous" />
-              </button>
-
-              <div className="desktop-reviews-container">
-                <div
-                  className="desktop-reviews-track"
-                  style={{
-                    transform: `translateX(calc(-${reviewOffset + currentReview} * (((56vw - 60px) / 4) + 20px)))`
-                  }}
-                >
-                  {displayReviews.map((review, index) => (
-                    <div key={`review-${index}`} className="desktop-review-card">
-                      <div className="desktop-review-card-inner">
-                        <div className="desktop-review-avatar-container">
-                          <img src={review.asset} alt={review.name} className="desktop-review-avatar" />
-                        </div>
-                        <div className="desktop-review-name">{review.name}</div>
-                        <div className="desktop-review-company">{review.company}</div>
-                        <div className="desktop-review-location">{review.location}</div>
-                        <div className="desktop-review-text">{review.testimonial}</div>
-                        <div className="desktop-review-stars">
-                          {[...Array(5)].map((_, i) => (
-                            <span key={i} className={i < review.rating ? "star star-filled" : "star star-empty"}>★</span>
-                          ))}
-                        </div>
+                {displayReviews.map((review, index) => (
+                  <div key={`review-${index}`} className="desktop-review-card">
+                    <div className="desktop-review-card-inner">
+                      <div className="desktop-review-avatar-container">
+                        <img src={review.asset} alt={review.name} className="desktop-review-avatar" />
+                      </div>
+                      <div className="desktop-review-name">{review.name}</div>
+                      <div className="desktop-review-company">{review.company}</div>
+                      <div className="desktop-review-location">{review.location}</div>
+                      <div className="desktop-review-text">{review.testimonial}</div>
+                      <div className="desktop-review-stars">
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i} className={i < review.rating ? "star star-filled" : "star star-empty"}>★</span>
+                        ))}
                       </div>
                     </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <button
+              className="desktop-review-nav-btn desktop-review-nav-next"
+              onClick={() => setCurrentReview((prev) => prev + 1)}
+              aria-label="Next review"
+            >
+              <img src="/images/desktop/img_next_btn.png" alt="Next" />
+            </button>
+          </div>
+        </section>
+
+        {/* Registration Section */}
+        <section className="desktop-registration-section" ref={registrationFormRef} id="contact">
+          <h2 className="desktop-registration-title">
+            ĐĂNG KÝ NHẬN THÔNG TIN
+          </h2>
+
+          <div className="desktop-registration-container">
+            {/* Left: Decorative Image */}
+            <div className="desktop-registration-image-container">
+              <img
+                src="/images/desktop/img_registration_decor.png"
+                alt="Registration Decor"
+                className="desktop-registration-decor-image"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+              />
+            </div>
+
+            {/* Right: Form */}
+            <form id="contact-form" className="desktop-registration-form" onSubmit={handleSubmit}>
+              <div className="desktop-form-input-wrapper" data-placeholder="Họ và tên">
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="desktop-form-input"
+                  required
+                />
+                {!formData.name && <span className="desktop-placeholder-with-asterisk">Họ và tên <span className="desktop-asterisk-green">*</span></span>}
+              </div>
+
+              <div className="desktop-form-input-wrapper" data-placeholder="Số điện thoại">
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    setFormData({ ...formData, phone: value });
+                  }}
+                  className="desktop-form-input"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  required
+                />
+                {!formData.phone && <span className="desktop-placeholder-with-asterisk">Số điện thoại <span className="desktop-asterisk-green">*</span></span>}
+              </div>
+
+              <div className="desktop-industry-selector">
+                <label className="desktop-industry-label">Ngành hàng</label>
+                <div className="desktop-industry-tags">
+                  {industries.map((industry) => (
+                    <button
+                      key={industry}
+                      type="button"
+                      className={`desktop-industry-tag ${formData.industries.includes(industry) ? 'active' : ''}`}
+                      onClick={() => toggleIndustry(industry)}
+                    >
+                      {industry}
+                      <span className="desktop-tag-icon">{formData.industries.includes(industry) ? '✓' : '+'}</span>
+                    </button>
                   ))}
                 </div>
               </div>
 
               <button
-                className="desktop-review-nav-btn desktop-review-nav-next"
-                onClick={() => setCurrentReview((prev) => prev + 1)}
-                aria-label="Next review"
+                type="submit"
+                className={`desktop-submit-button ${isFormValid ? 'enabled' : ''}`}
+                disabled={!isFormValid || isSubmitting}
               >
-                <img src="/images/desktop/img_next_btn.png" alt="Next" />
+                {isSubmitting ? 'ĐANG GỬI...' : 'ĐĂNG KÝ NGAY'}
               </button>
-            </div>
-          </section>
 
-          {/* Registration Section */}
-          <section className="desktop-registration-section" ref={registrationFormRef} id="contact">
-            <h2 className="desktop-registration-title">
-              ĐĂNG KÝ NHẬN THÔNG TIN
-            </h2>
-
-            <div className="desktop-registration-container">
-              {/* Left: Decorative Image */}
-              <div className="desktop-registration-image-container">
-                <img
-                  src="/images/desktop/img_registration_decor.png"
-                  alt="Registration Decor"
-                  className="desktop-registration-decor-image"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                />
-              </div>
-
-              {/* Right: Form */}
-              <form id="contact-form" className="desktop-registration-form" onSubmit={handleSubmit}>
-                <div className="desktop-form-input-wrapper" data-placeholder="Họ và tên">
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="desktop-form-input"
-                    required
-                  />
-                  {!formData.name && <span className="desktop-placeholder-with-asterisk">Họ và tên <span className="desktop-asterisk-green">*</span></span>}
+              {submitError && (
+                <div className="desktop-form-message desktop-error-message">
+                  ✗ {submitError}
                 </div>
+              )}
+            </form>
+          </div>
+        </section>
 
-                <div className="desktop-form-input-wrapper" data-placeholder="Số điện thoại">
-                  <input
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '');
-                      setFormData({ ...formData, phone: value });
-                    }}
-                    className="desktop-form-input"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    required
-                  />
-                  {!formData.phone && <span className="desktop-placeholder-with-asterisk">Số điện thoại <span className="desktop-asterisk-green">*</span></span>}
-                </div>
 
-                <div className="desktop-industry-selector">
-                  <label className="desktop-industry-label">Ngành hàng</label>
-                  <div className="desktop-industry-tags">
-                    {industries.map((industry) => (
-                      <button
-                        key={industry}
-                        type="button"
-                        className={`desktop-industry-tag ${formData.industries.includes(industry) ? 'active' : ''}`}
-                        onClick={() => toggleIndustry(industry)}
-                      >
-                        {industry}
-                        <span className="desktop-tag-icon">{formData.industries.includes(industry) ? '✓' : '+'}</span>
-                      </button>
+
+        {/* FAQ Section */}
+        <section className="desktop-faq-section">
+          <h2 className="desktop-registration-title">
+            CÂU HỎI THƯỜNG GẶP
+          </h2>
+          <div className="desktop-faq-container">
+            {/* Left Column */}
+            <div className="desktop-faq-column">
+              {faqData.slice(0, Math.ceil(faqData.length / 2)).map((faq, index) => (
+                <div key={index} className="desktop-faq-item">
+                  <div className="desktop-faq-question">Q: {faq.Q}</div>
+                  <div className="desktop-faq-answer">
+                    A: {faq.A.split('\n').map((line, i) => (
+                      <React.Fragment key={i}>
+                        {i > 0 && <br />}
+                        {line}
+                      </React.Fragment>
                     ))}
                   </div>
                 </div>
-
-                <button
-                  type="submit"
-                  className={`desktop-submit-button ${isFormValid ? 'enabled' : ''}`}
-                  disabled={!isFormValid || isSubmitting}
-                >
-                  {isSubmitting ? 'ĐANG GỬI...' : 'ĐĂNG KÝ NGAY'}
-                </button>
-
-                {submitError && (
-                  <div className="desktop-form-message desktop-error-message">
-                    ✗ {submitError}
-                  </div>
-                )}
-              </form>
+              ))}
             </div>
-          </section>
 
-
-
-          {/* FAQ Section */}
-          <section className="desktop-faq-section">
-            <h2 className="desktop-registration-title">
-              CÂU HỎI THƯỜNG GẶP
-            </h2>
-            <div className="desktop-faq-container">
-              {/* Left Column */}
-              <div className="desktop-faq-column">
-                {faqData.slice(0, Math.ceil(faqData.length / 2)).map((faq, index) => (
-                  <div key={index} className="desktop-faq-item">
-                    <div className="desktop-faq-question">Q: {faq.Q}</div>
-                    <div className="desktop-faq-answer">
-                      A: {faq.A.split('\n').map((line, i) => (
-                        <React.Fragment key={i}>
-                          {i > 0 && <br />}
-                          {line}
-                        </React.Fragment>
-                      ))}
-                    </div>
+            {/* Right Column */}
+            <div className="desktop-faq-column">
+              {faqData.slice(Math.ceil(faqData.length / 2)).map((faq, index) => (
+                <div key={index} className="desktop-faq-item">
+                  <div className="desktop-faq-question">Q: {faq.Q}</div>
+                  <div className="desktop-faq-answer">
+                    A: {faq.A.split('\n').map((line, i) => (
+                      <React.Fragment key={i}>
+                        {i > 0 && <br />}
+                        {line}
+                      </React.Fragment>
+                    ))}
                   </div>
-                ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Info Section */}
+        <section className="desktop-contact-info-section">
+          <h2 className="desktop-contact-info-title">THÔNG TIN LIÊN HỆ</h2>
+
+          <div className="desktop-contact-info-content">
+            {/* Column 1: Vietnam & BVI */}
+            <div className="desktop-contact-region">
+              <h3 className="desktop-contact-region-title">Việt Nam</h3>
+
+              <div className="desktop-contact-office">
+                <div className="desktop-contact-office-name">Hà Nội</div>
+                <div className="desktop-contact-office-address">Tầng 2, tòa Dolphin Plaza,</div>
+                <div className="desktop-contact-office-address">6 Nguyễn Hoàng, Từ Liêm</div>
               </div>
 
-              {/* Right Column */}
-              <div className="desktop-faq-column">
-                {faqData.slice(Math.ceil(faqData.length / 2)).map((faq, index) => (
-                  <div key={index} className="desktop-faq-item">
-                    <div className="desktop-faq-question">Q: {faq.Q}</div>
-                    <div className="desktop-faq-answer">
-                      A: {faq.A.split('\n').map((line, i) => (
-                        <React.Fragment key={i}>
-                          {i > 0 && <br />}
-                          {line}
-                        </React.Fragment>
-                      ))}
-                    </div>
-                  </div>
-                ))}
+              <div className="desktop-contact-office">
+                <div className="desktop-contact-office-name">Hồ Chí Minh</div>
+                <div className="desktop-contact-office-address">8-10 Tạ Hiện, Cát Lái</div>
+              </div>
+
+              <div style={{ marginTop: '2rem' }}>
+                <h3 className="desktop-contact-region-title">BVI Office</h3>
+                <div className="desktop-contact-office-address">OMC Chambers, Wickham Cay 1,</div>
+                <div className="desktop-contact-office-address">Road Town, Tortola,</div>
+                <div className="desktop-contact-office-address">British Virgin Islands</div>
               </div>
             </div>
-          </section>
 
-          {/* Contact Info Section */}
-          <section className="desktop-contact-info-section">
-            <h2 className="desktop-contact-info-title">THÔNG TIN LIÊN HỆ</h2>
-
-            <div className="desktop-contact-info-content">
-              {/* Column 1: Vietnam & BVI */}
-              <div className="desktop-contact-region">
-                <h3 className="desktop-contact-region-title">Việt Nam</h3>
-
-                <div className="desktop-contact-office">
-                  <div className="desktop-contact-office-name">Hà Nội</div>
-                  <div className="desktop-contact-office-address">Tầng 2, tòa Dolphin Plaza,</div>
-                  <div className="desktop-contact-office-address">6 Nguyễn Hoàng, Từ Liêm</div>
-                </div>
-
-                <div className="desktop-contact-office">
-                  <div className="desktop-contact-office-name">Hồ Chí Minh</div>
-                  <div className="desktop-contact-office-address">8-10 Tạ Hiện, Cát Lái</div>
-                </div>
-
-                <div style={{ marginTop: '2rem' }}>
-                  <h3 className="desktop-contact-region-title">BVI Office</h3>
-                  <div className="desktop-contact-office-address">OMC Chambers, Wickham Cay 1,</div>
-                  <div className="desktop-contact-office-address">Road Town, Tortola,</div>
-                  <div className="desktop-contact-office-address">British Virgin Islands</div>
-                </div>
+            {/* Column 2: HongKong & Singapore */}
+            <div className="desktop-contact-region">
+              <div>
+                <h3 className="desktop-contact-region-title">HongKong</h3>
+                <div className="desktop-contact-office-address">Unit 308, 3/F., Chevalier House,</div>
+                <div className="desktop-contact-office-address">45-51 Chatham Rd South,</div>
+                <div className="desktop-contact-office-address">Tsim Sha Tsui</div>
               </div>
 
-              {/* Column 2: HongKong & Singapore */}
-              <div className="desktop-contact-region">
-                <div>
-                  <h3 className="desktop-contact-region-title">HongKong</h3>
-                  <div className="desktop-contact-office-address">Unit 308, 3/F., Chevalier House,</div>
-                  <div className="desktop-contact-office-address">45-51 Chatham Rd South,</div>
-                  <div className="desktop-contact-office-address">Tsim Sha Tsui</div>
-                </div>
-
-                <div style={{ marginTop: '2rem' }}>
-                  <h3 className="desktop-contact-region-title">Singapore</h3>
-                  <div className="desktop-contact-office-address">470 North Bridge Road,</div>
-                  <div className="desktop-contact-office-address">#05-12 Bugis Cube</div>
-                </div>
-              </div>
-
-              {/* Column 3: Email & Button */}
-              <div className="desktop-contact-email-section">
-                <h3 className="desktop-contact-email-title">Email</h3>
-                <a href="mailto:contact@netlinkad.com" className="desktop-contact-email-link">contact@netlinkad.com</a>
-
-                <button
-                  className="desktop-contact-btn"
-                  onClick={() => window.location.href = 'mailto:contact@netlinkad.com'}
-                >
-                  LIÊN HỆ NGAY
-                </button>
-              </div>
-
-              <div className="desktop-contact-copyright">
-                © 2025. All rights reserved.
+              <div style={{ marginTop: '2rem' }}>
+                <h3 className="desktop-contact-region-title">Singapore</h3>
+                <div className="desktop-contact-office-address">470 North Bridge Road,</div>
+                <div className="desktop-contact-office-address">#05-12 Bugis Cube</div>
               </div>
             </div>
-          </section>
 
-        </main>
+            {/* Column 3: Email & Button */}
+            <div className="desktop-contact-email-section">
+              <h3 className="desktop-contact-email-title">Email</h3>
+              <a href="mailto:contact@netlinkad.com" className="desktop-contact-email-link">contact@netlinkad.com</a>
 
-        <DesktopFloatingCTA />
-      </div>
-    </GoogleReCaptchaProvider>
+              <button
+                className="desktop-contact-btn"
+                onClick={() => window.location.href = 'mailto:contact@netlinkad.com'}
+              >
+                LIÊN HỆ NGAY
+              </button>
+            </div>
+
+            <div className="desktop-contact-copyright">
+              © 2025. All rights reserved.
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <DesktopFloatingCTA />
+    </div>
   );
 };
