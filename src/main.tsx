@@ -8,7 +8,11 @@ import App from './App.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}>
+      <GoogleReCaptchaProvider reCaptchaKey={import.meta.env.VITE_RECAPTCHA_SITE_KEY} scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: 'head'
+      }}>
         <App />
       </GoogleReCaptchaProvider>
     </BrowserRouter>
