@@ -4,7 +4,6 @@ import { useDeviceDetection } from '../hooks/useDeviceDetection';
 interface DeviceContextType {
   isMobile: boolean;
   isDesktop: boolean;
-  windowWidth: number;
   deviceType: 'mobile' | 'desktop';
 }
 
