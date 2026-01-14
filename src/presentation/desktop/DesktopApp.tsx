@@ -246,15 +246,29 @@ export const DesktopApp: React.FC = () => {
         throw new Error(msg);
       }
 
+      const formElement = document.getElementById('contact-form') as HTMLFormElement | null;
+      const submitButton = document.getElementById('submit-button') as HTMLButtonElement | null;
       (window as any).dataLayer = (window as any).dataLayer || [];
       (window as any).dataLayer.push({
-        event: 'form_submit_success', // Tên event bạn muốn đổi
+        event: 'form_submit_success',
         eventModel: {
-          form_id: 'contact-form', // ID để bạn phân biệt các form
+          // Thông tin định danh (Yêu cầu của bạn)
+          form_id: 'contact-form',
           form_name: 'form_submit_success',
           form_destination: window.location.href,
-          // Bạn có thể gửi kèm thông tin (không bao gồm PII nhạy cảm nếu cần bảo mật)
-          industry_selected: payload.categories
+
+          // Dữ liệu nghiệp vụ từ payload
+          industry_selected: payload.categories,
+
+          // Bổ sung các trường bạn đã thắc mắc ở ảnh trước
+          // Tự động đếm số lượng trường input/textarea trong form
+          form_length: formElement ? formElement.querySelectorAll('input, textarea, select').length : 0,
+
+          // Lấy nội dung text của nút submit (ví dụ: "Gửi ngay")
+          form_submit_text: submitButton ? (submitButton.innerText || submitButton.value) : 'undefined',
+
+          // ID Google Ads (Để GTM nhận diện chính xác kênh quảng cáo)
+          send_to: "AW-17352267489"
         }
       });
 
@@ -586,6 +600,7 @@ export const DesktopApp: React.FC = () => {
               </div>
 
               <button
+                id="submit-button"
                 type="submit"
                 className={`desktop-submit-button ${isFormValid ? 'enabled' : ''}`}
                 disabled={!isFormValid || isSubmitting}
