@@ -528,7 +528,7 @@ export const DesktopApp: React.FC = () => {
             </div>
 
             {/* Right: Form */}
-            <form id="contact-form" name="contact-form" className="desktop-registration-form" onSubmit={handleSubmit}>
+            <form id="contact-form" name="form_submit_success" className="desktop-registration-form" onSubmit={handleSubmit}>
               <div className="desktop-form-input-wrapper" data-placeholder="Họ và tên">
                 <input
                   type="text"
