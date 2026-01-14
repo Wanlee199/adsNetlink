@@ -283,8 +283,8 @@ export const MobileApp: React.FC = () => {
       (window as any).dataLayer.push({
         event: 'form_submit_success', // Tên event bạn muốn đổi
         eventModel: {
-          form_id: 'contact-form-main', // ID để bạn phân biệt các form
-          form_name: 'Form Liên Hệ Tư Vấn',
+          form_id: 'contact-form', // ID để bạn phân biệt các form
+          form_name: 'form_submit_success',
           form_destination: window.location.href,
           // Bạn có thể gửi kèm thông tin (không bao gồm PII nhạy cảm nếu cần bảo mật)
           industry_selected: payload.categories
