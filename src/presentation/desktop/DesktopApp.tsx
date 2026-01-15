@@ -259,6 +259,8 @@ export const DesktopApp: React.FC = () => {
 
           // Dữ liệu nghiệp vụ từ payload
           industry_selected: payload.categories,
+          user_name: payload.name,
+          user_phone: payload.phone,
 
           // Bổ sung các trường bạn đã thắc mắc ở ảnh trước
           // Tự động đếm số lượng trường input/textarea trong form
