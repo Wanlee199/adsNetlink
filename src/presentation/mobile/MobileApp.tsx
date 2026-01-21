@@ -292,7 +292,9 @@ export const MobileApp: React.FC = () => {
 
           // Dữ liệu nghiệp vụ từ payload
           industry_selected: payload.categories,
-
+          user_name: payload.name,
+          user_phone: payload.phone,
+          
           // Bổ sung các trường bạn đã thắc mắc ở ảnh trước
           // Tự động đếm số lượng trường input/textarea trong form
           form_length: formElement ? formElement.querySelectorAll('input, textarea, select').length : 0,
