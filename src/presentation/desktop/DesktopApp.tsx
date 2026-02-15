@@ -560,7 +560,7 @@ export const DesktopApp: React.FC = () => {
               <div className="desktop-form-input-wrapper" data-placeholder="Họ và tên">
                 <input
                   type="text"
-                  maxlength="20"
+                  maxLength="20"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="desktop-form-input"
