@@ -46,15 +46,21 @@ export default async function (req, res) {
         await jwtClient.authorize();
 
         const sheets = google.sheets({ version: 'v4', auth: jwtClient });
+
+        const vnTime = new Date().toLocaleString("sv-SE", {
+          timeZone: "Asia/Ho_Chi_Minh",
+          hour12: false,
+        }).replace(' ', ' - ');
+
         await sheets.spreadsheets.values.append({
           spreadsheetId: sheetId,
           range: sheetRange,
           valueInputOption: 'RAW',
           requestBody: {
-            values: [[new Date().toISOString(), name || '', phone || '', categories || '']]
+            values: [[vnTime, name || '', phone || '', categories || '']]
           }
         });
-        console.log('Appended row to Google Sheet');
+        // console.log('Appended row to Google Sheet');
       } catch (sheetErr) {
         console.error('Google Sheets append failed:', sheetErr);
         
@@ -97,7 +103,7 @@ export default async function (req, res) {
     });
 
     const mailOptions = {
-      from: gmailUser,
+      from: `"[Ads.Netlink] New Leads Notification"<${gmailUser}>`,
       to: process.env.RECEIVER_EMAIL || gmailUser,
       subject: `Đăng ký từ ${name || 'Khách'}`,
       text: `Tên: ${name || ''}\nPhone: ${phone || ''}\nNgành: ${categories || ''}`
