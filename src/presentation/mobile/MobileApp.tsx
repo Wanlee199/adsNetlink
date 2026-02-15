@@ -804,6 +804,7 @@ export const MobileApp: React.FC = () => {
               <input
                 type="text"
                 value={formData.name}
+                maxlength="20"
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="form-input form-input-required"
                 required
